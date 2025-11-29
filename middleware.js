@@ -1,20 +1,18 @@
 let piAddress = null;
 
-// Poll serverhook to get the latest Pi address every 30 seconds
 async function updatePiAddress() {
     try {
-        const res = await fetch("/current-pi-address.json"); // served from your site
+        const res = await fetch("/current-pi");
         const data = await res.json();
         piAddress = data.pi_address || null;
     } catch (e) {
-        console.log("Failed to get Pi address:", e);
+        console.log("Failed to fetch Pi address:", e);
         piAddress = null;
     }
-    setTimeout(updatePiAddress, 30000);
+    setTimeout(updatePiAddress, 30000); // refresh every 30s
 }
 updatePiAddress();
 
-// Function to route data
 async function sendData(key, value) {
     if (piAddress) {
         try {
@@ -30,12 +28,9 @@ async function sendData(key, value) {
         }
     }
 
-    // Fallback: call existing site script for Firebase
-    if (window.firebaseSend) {
-        return window.firebaseSend(key, value);
-    } else {
-        console.error("No Firebase fallback available");
-    }
+    // Fallback to Firebase script on page
+    if (window.firebaseSend) return window.firebaseSend(key, value);
+    console.error("No Firebase fallback available");
 }
 
 async function getData(key) {
@@ -49,10 +44,6 @@ async function getData(key) {
         }
     }
 
-    // Fallback
-    if (window.firebaseGet) {
-        return window.firebaseGet(key);
-    } else {
-        console.error("No Firebase fallback available");
-    }
+    if (window.firebaseGet) return window.firebaseGet(key);
+    console.error("No Firebase fallback available");
 }
