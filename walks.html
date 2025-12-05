@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"/>
+  <script src="middleware.js"></script>
   <style>
     :root {
       --primary: #4a4fcf;
@@ -367,6 +368,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
   <script type="module">
+    import { updatePiIP, writeData, readData } from 'pi-wrapper.js';
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -584,7 +586,10 @@
         })(),
         timestamp: Date.now()
       };
-      await push(statusRef, data);
+      // push normally, but then write the pushed data to Pi
+      const newRef = push(statusRef);  // generates a new key
+      await writeData(`narberthDogWalkStatuses/${newRef.key}`, data, ref.bind(null, db));
+      await newRef.set(data);  // still write to Firebase as fallback
       walkModal.classList.add("hidden");
       e.target.reset();
       if (drawnItems) drawnItems.clearLayers();
