@@ -129,10 +129,24 @@
         <a href="\walks.html" aria-label="Walks"><i class="fa-solid fa-dog"></i></a>
         <a href="\index.html" aria-label="Home"><i class="fa-solid fa-house"></i></a>
         <a class="active" href="index.html" aria-label="Pet-net"><i class="fa-solid fa-globe"></i></a>
+        <a href="\profiles.html" aria-label="Profiles"><i class="fa-solid fa-user"></i></a>
         <a href="\feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
-        <a href="\admin.html"><i class="fa-solid fa-user-shield"></i></a>
+        <a href="/admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
     </div>
 
     <script src="script.js" type="module"></script>
-</body>
-</html>
+    <script>
+      (function(){
+        const adminLink = document.getElementById('adminLink');
+        function update() {
+          try {
+            const u = JSON.parse(localStorage.getItem('petpaths_currentUser'));
+            if (adminLink) adminLink.style.display = (u && u.username === 'admin') ? 'flex' : 'none';
+          } catch {}
+        }
+        update();
+        window.addEventListener('storage', update);
+      })();
+    </script>
+  </body>
+  </html>

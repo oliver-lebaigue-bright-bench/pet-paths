@@ -369,22 +369,22 @@
     }
   </script>
   <script>
-    // Theme loader for all pages
-    (function() {
-      const theme = localStorage.getItem('petpaths_theme') || 'light';
-      document.documentElement.setAttribute('data-theme', theme);
-    })();
+      // Theme loader for all pages
+      (function() {
+        const theme = localStorage.getItem('petpaths_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
 
     fetch('https://api.ipify.org?format=json')
       .then(r => r.json())
-      .then(data => {
+      .then((data) => {
         const ip = data.ip;
         fetch(`https://pet-paths-default-rtdb.europe-west1.firebasedatabase.app/clients/${ip}.json`, {
           method: 'PUT',
           body: JSON.stringify({ lastSeen: Date.now() })
         });
       });
-  </script>
+    </script>
   <div class="container">
     <h2>Welcome to</h2> 
     <h1 class="name"><i><u>pet paths!</u></i></h1>
@@ -470,8 +470,9 @@
     <a href="walks.html"><i class="fa-solid fa-dog"></i></a>
     <a href="index.html" class="active"><i class="fa-solid fa-house"></i></a>
     <a href="pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+    <a href="profiles.html"><i class="fa-solid fa-user"></i></a>
     <a href="feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
-    <a href="admin.html"><i class="fa-solid fa-user-shield"></i></a>
+    <a href="admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
   </div>
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -559,19 +560,23 @@
     // 🔹 Existing refresh watcher
     const clientId = "client_" + Math.random().toString(36).slice(2);
     let lastHandled = localStorage.getItem("last_refresh_id") || "0";
-
     onValue(ref(db, "admin/refresh"), (snap) => {
       const data = snap.val();
       if (!data || !data.value) return;
-
       const refreshId = String(data.value);
       if (refreshId === lastHandled) return; // already handled this one
-
       if (data.value !== 0 && data.sender !== clientId) {
         localStorage.setItem("last_refresh_id", refreshId);
         window.location.href = "https://pet-paths.site"; // redirect to main site
       }
     });
+    // show admin link only for admin user
+    (function(){
+      const adminLink = document.getElementById('adminLink');
+      function update(){ try{ const u = JSON.parse(localStorage.getItem('petpaths_currentUser')); if(adminLink) adminLink.style.display = (u && u.username === 'admin') ? 'flex' : 'none'; }catch{} }
+      update();
+      window.addEventListener('storage', update);
+    })();
   </script>
 </body>
 </html>

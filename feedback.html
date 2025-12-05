@@ -214,7 +214,7 @@
 
         fetch('https://api.ipify.org?format=json')
             .then(r => r.json())
-            .then(data => {
+            .then((data) => {
                 const ip = data.ip;
                 fetch(`https://pet-paths-default-rtdb.europe-west1.firebasedatabase.app/clients/${ip}.json`, {
                 method: 'PUT',
@@ -245,9 +245,18 @@
         <a href="playdates.html"><i class="fa-solid fa-calendar"></i></a>
         <a href="walks.html"><i class="fa-solid fa-dog"></i></a>
         <a href="index.html"><i class="fa-solid fa-house"></i></a>
-        <a href="pet-net/index.html"><i class="fa-solid fa-user"></i></a>
-        <a class="active" href="feedback.html"><i class="fa-solid fa-globe"></i></a>
-        <a href="admin.html"><i class="fa-solid fa-user-shield"></i></a>
+        <a href="pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+        <a href="profiles.html"><i class="fa-solid fa-user"></i></a>
+        <a class="active" href="feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
+        <a href="admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
     </div>
+   <script>
+     (function(){
+       const adminLink = document.getElementById('adminLink');
+       function update(){ try{ const u = JSON.parse(localStorage.getItem('petpaths_currentUser')); if(adminLink) adminLink.style.display = (u && u.username === 'admin') ? 'flex' : 'none'; }catch{} }
+       update();
+       window.addEventListener('storage', update);
+     })();
+   </script>
 </body>
 </html>

@@ -5,43 +5,374 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Control Panel - Pet Paths</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* --- (kept your original styles, plus a few small additions for lists & modals) --- */
+    /* --- Enhanced Styles --- */
     @media (max-width: 600px) {
       html, body { width: 100vw; overflow-x: hidden !important; margin: 0; padding: 0; }
-      .admin-card { padding: 14px 6px 12px 6px; width: 100%; max-width: 100%; border-radius: 0; box-sizing: border-box; }
-      .content { padding: 14px 0 80px 0; width: 100%; max-width: 100%; min-height: calc(100vh - 64px - 60px); box-sizing: border-box; margin: 0; }
-      .header { font-size: 1.05rem; padding: 10px; width: 100vw; box-sizing: border-box; }
+      .admin-card { padding: 16px 12px 14px 12px; width: 100%; max-width: 100%; border-radius: 0; box-sizing: border-box; }
+      .content { padding: 16px 8px 100px 8px; width: 100%; max-width: 100%; min-height: calc(100vh - 64px - 60px); box-sizing: border-box; margin: 0; }
+      .header { font-size: 1.1rem; padding: 12px; width: 100vw; box-sizing: border-box; }
       .footer { left: 0; bottom: 0; width: 100vw; position: fixed; box-sizing: border-box; }
-      .footer a { font-size: 20px; }
-      .admin-btn { font-size: 0.98rem; padding: 10px 0; min-width: 90px; }
-      pre { font-size: 0.92em; }
+      .footer a { font-size: 22px; }
+      .admin-btn { font-size: 1rem; padding: 12px 8px; min-width: 100px; }
+      pre { font-size: 0.95em; }
+      .card-row { flex-direction: column; gap: 16px; }
+      .row-between { flex-direction: column; align-items: flex-start; gap: 12px; }
     }
-    :root { --primary: #4a4fcf; --primary-dark: #3a3fb0; --bg: #f3f3f3; --text: #222; --btn-text: #fff; --header-bg: #4a4fcf; --header-text: #fff; }
-    [data-theme="dark"] { --primary: #222b45; --primary-dark: #151a30; --bg: #181a20; --text: #f3f3f3; --btn-text: #fff; --header-bg: #222b45; --header-text: #fff; }
-    body { margin: 0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s, color 0.3s; }
-    .header { display:flex; justify-content:space-between; align-items:center; padding:15px; background:var(--header-bg); color:var(--header-text); font-size:1.2rem; font-weight:bold; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-    .content { flex:1; padding:24px 16px 120px 16px; max-width:900px; margin:0 auto; width:100%; display:flex; flex-direction:column; gap:18px; align-items:center; }
-    .admin-card { background: var(--card-bg, #fff); color: var(--card-text, var(--text)); border-radius:16px; box-shadow:0 2px 10px rgba(60,60,60,0.08); border:1.5px solid #e0e0de; padding:24px 22px 18px 22px; margin-top:10px; width:100%; max-width:920px; display:flex; flex-direction:column; gap:1.2em; align-items:flex-start; transition:background 0.3s, color 0.3s; }
-    .card-row { display:flex; gap:12px; width:100%; align-items:center; flex-wrap:wrap; }
-    .admin-btn { background: #4a4fcf; color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-    .admin-btn.secondary { background:#eee; color:#111; border:1px solid #ddd; font-weight:600; }
-    .admin-btn.warn { background:#d32f2f; }
-    .small { font-size:0.9rem; color:#666; }
-    .list { width:100%; max-height:260px; overflow:auto; border-radius:8px; border:1px solid #eee; padding:8px; background: #fafafa; }
-    .list .row { display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #eee; align-items:center; gap:8px; }
-    .list .row:last-child { border-bottom: none; }
-    .pill { padding:6px 8px; border-radius:8px; background:#f0f0ff; color:#222; font-weight:600; font-size:0.85rem; }
-    .footer { background: var(--primary); display:flex; justify-content:space-around; padding:14px 0 10px; position:fixed; bottom:0; width:100%; z-index:1002; transition: background 0.3s; }
-    .footer a { text-decoration:none; color:black; font-size:24px; flex:1; display:flex; align-items:center; justify-content:center; position:relative; }
-    .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:9999; padding:18px; }
-    .modal { background:#fff; padding:18px; border-radius:12px; width:100%; max-width:680px; max-height:85vh; overflow:auto; box-shadow:0 6px 24px rgba(0,0,0,0.25); }
-    input[type="text"], textarea, select { width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; box-sizing:border-box; font-size:1rem; }
-    label { font-weight:600; font-size:0.95rem; margin-bottom:6px; display:block; }
-    .row-between { display:flex; justify-content:space-between; width:100%; align-items:center; gap:12px; }
-    .muted { color:#777; font-size:0.95rem; }
-    .log-entry { font-family:monospace; font-size:0.92rem; color:#333; padding:6px 0; border-bottom:1px dashed #eee; }
-    @media (max-width:720px) { .card-row { flex-direction:column; } .row-between { flex-direction:column; align-items:flex-start; } }
+    :root { 
+      --primary: #4a4fcf; 
+      --primary-dark: #3a3fb0; 
+      --primary-light: #6c7bff; 
+      --bg: #f8f9fa; 
+      --text: #212529; 
+      --btn-text: #fff; 
+      --header-bg: linear-gradient(135deg, #4a4fcf, #6c7bff); 
+      --header-text: #fff; 
+      --card-bg: #ffffff; 
+      --card-shadow: 0 4px 20px rgba(74, 79, 207, 0.1); 
+      --border: #e9ecef; 
+      --muted: #6c757d; 
+      --success: #28a745; 
+      --warning: #ffc107; 
+      --danger: #dc3545; 
+      --transition: all 0.3s ease; 
+    }
+    [data-theme="dark"] { 
+      --primary: #222b45; 
+      --primary-dark: #151a30; 
+      --primary-light: #3a4155; 
+      --bg: #1a1d23; 
+      --text: #f8f9fa; 
+      --btn-text: #fff; 
+      --header-bg: linear-gradient(135deg, #222b45, #3a4155); 
+      --header-text: #fff; 
+      --card-bg: #2d3748; 
+      --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
+      --border: #495057; 
+      --muted: #adb5bd; 
+    }
+    body { 
+      margin: 0; 
+      font-family: 'Inter', Arial, sans-serif; 
+      background: var(--bg); 
+      color: var(--text); 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh; 
+      transition: var(--transition); 
+      line-height: 1.6; 
+    }
+    .header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 16px 20px; 
+      background: var(--header-bg); 
+      color: var(--header-text); 
+      font-size: 1.3rem; 
+      font-weight: 700; 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+      position: relative; 
+    }
+    .header::after { 
+      content: ''; 
+      position: absolute; 
+      bottom: 0; 
+      left: 0; 
+      right: 0; 
+      height: 4px; 
+      background: linear-gradient(90deg, var(--primary), var(--primary-light)); 
+    }
+    .content { 
+      flex: 1; 
+      padding: 32px 20px 140px 20px; 
+      max-width: 1000px; 
+      margin: 0 auto; 
+      width: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 24px; 
+      align-items: center; 
+    }
+    .admin-card { 
+      background: var(--card-bg); 
+      color: var(--text); 
+      border-radius: 16px; 
+      box-shadow: var(--card-shadow); 
+      border: 1px solid var(--border); 
+      padding: 28px 24px 20px 24px; 
+      margin-top: 10px; 
+      width: 100%; 
+      max-width: 1000px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 1.5em; 
+      align-items: flex-start; 
+      transition: var(--transition); 
+      position: relative; 
+      overflow: hidden; 
+    }
+    .admin-card::before { 
+      content: ''; 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      height: 4px; 
+      background: linear-gradient(90deg, var(--primary), var(--primary-light)); 
+    }
+    .admin-card:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 30px rgba(74, 79, 207, 0.15); 
+    }
+    .card-row { 
+      display: flex; 
+      gap: 16px; 
+      width: 100%; 
+      align-items: center; 
+      flex-wrap: wrap; 
+    }
+    .admin-btn { 
+      background: var(--primary); 
+      color: var(--btn-text); 
+      border: none; 
+      padding: 12px 20px; 
+      border-radius: 12px; 
+      font-size: 1rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: var(--transition); 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      box-shadow: 0 2px 8px rgba(74, 79, 207, 0.2); 
+    }
+    .admin-btn:hover { 
+      background: var(--primary-dark); 
+      transform: translateY(-1px); 
+      box-shadow: 0 4px 12px rgba(74, 79, 207, 0.3); 
+    }
+    .admin-btn:active { 
+      transform: translateY(0); 
+    }
+    .admin-btn.secondary { 
+      background: #f8f9fa; 
+      color: var(--text); 
+      border: 1px solid var(--border); 
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+    }
+    .admin-btn.secondary:hover { 
+      background: #e9ecef; 
+    }
+    .admin-btn.warn { 
+      background: var(--danger); 
+    }
+    .admin-btn.warn:hover { 
+      background: #c82333; 
+    }
+    .small { 
+      font-size: 0.9rem; 
+      color: var(--muted); 
+    }
+    .list { 
+      width: 100%; 
+      max-height: 300px; 
+      overflow: auto; 
+      border-radius: 12px; 
+      border: 1px solid var(--border); 
+      padding: 12px; 
+      background: var(--card-bg); 
+      scrollbar-width: thin; 
+      scrollbar-color: var(--primary) var(--bg); 
+    }
+    .list::-webkit-scrollbar { 
+      width: 6px; 
+    }
+    .list::-webkit-scrollbar-track { 
+      background: var(--bg); 
+    }
+    .list::-webkit-scrollbar-thumb { 
+      background: var(--primary); 
+      border-radius: 3px; 
+    }
+    .list .row { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 12px; 
+      border-bottom: 1px solid var(--border); 
+      align-items: center; 
+      gap: 12px; 
+      transition: var(--transition); 
+      border-radius: 8px; 
+    }
+    .list .row:hover { 
+      background: rgba(74, 79, 207, 0.05); 
+    }
+    .list .row:last-child { 
+      border-bottom: none; 
+    }
+    .pill { 
+      padding: 8px 12px; 
+      border-radius: 20px; 
+      background: linear-gradient(135deg, var(--primary), var(--primary-light)); 
+      color: var(--btn-text); 
+      font-weight: 600; 
+      font-size: 0.85rem; 
+      box-shadow: 0 2px 6px rgba(74, 79, 207, 0.2); 
+    }
+    .footer { 
+      background: var(--primary); 
+      display: flex; 
+      justify-content: space-around; 
+      padding: 14px 0 10px; 
+      position: fixed; 
+      bottom: 0; 
+      width: 100%; 
+      z-index: 1002; 
+      transition: var(--transition); 
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); 
+    }
+    .footer a { 
+      text-decoration: none; 
+      color: black; 
+      font-size: 24px; 
+      flex: 1; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      position: relative; 
+    }
+    .footer a:hover { 
+      color: var(--primary-light); 
+      transform: scale(1.1); 
+    }
+    .footer a.active { 
+      color: var(--warning); 
+    }
+    .modal-bg { 
+      display: none; 
+      position: fixed; 
+      inset: 0; 
+      background: rgba(0, 0, 0, 0.5); 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 9999; 
+      padding: 18px; 
+    }
+    .modal { 
+      background: var(--card-bg); 
+      padding: 18px; 
+      border-radius: 12px; 
+      width: 100%; 
+      max-width: 680px; 
+      max-height: 85vh; 
+      overflow: auto; 
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25); 
+    }
+    input[type="text"], textarea, select { 
+      width: 100%; 
+      padding: 10px; 
+      border-radius: 8px; 
+      border: 1px solid var(--border); 
+      box-sizing: border-box; 
+      font-size: 1rem; 
+      font-family: inherit; 
+      transition: var(--transition); 
+      background: var(--card-bg); 
+      color: var(--text); 
+    }
+    input[type="text"]:focus, textarea:focus, select:focus { 
+      outline: none; 
+      border-color: var(--primary); 
+      box-shadow: 0 0 0 3px rgba(74, 79, 207, 0.1); 
+    }
+    input[type="password"] { 
+      border: 2px solid var(--border); 
+    }
+    input[type="password"]:focus { 
+      border-color: var(--primary); 
+    }
+    label { 
+      font-weight: 600; 
+      font-size: 0.95rem; 
+      margin-bottom: 6px; 
+      display: block; 
+      color: var(--text); 
+    }
+    .row-between { 
+      display: flex; 
+      justify-content: space-between; 
+      width: 100%; 
+      align-items: center; 
+      gap: 12px; 
+    }
+    .muted { 
+      color: var(--muted); 
+      font-size: 0.95rem; 
+    }
+    .log-entry { 
+      font-family: monospace; 
+      font-size: 0.92rem; 
+      color: var(--text); 
+      padding: 6px 0; 
+      border-bottom: 1px dashed var(--border); 
+    }
+    .switch { 
+      position: relative; 
+      display: inline-block; 
+      width: 50px; 
+      height: 24px; 
+    }
+    .switch input { 
+      opacity: 0; 
+      width: 0; 
+      height: 0; 
+    }
+    .slider { 
+      position: absolute; 
+      cursor: pointer; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0; 
+      background: var(--border); 
+      transition: var(--transition); 
+      border-radius: 24px; 
+    }
+    .slider:before { 
+      position: absolute; 
+      content: ""; 
+      height: 18px; 
+      width: 18px; 
+      left: 3px; 
+      bottom: 3px; 
+      background: white; 
+      transition: var(--transition); 
+      border-radius: 50%; 
+    }
+    input:checked + .slider { 
+      background: var(--primary); 
+    }
+    input:checked + .slider:before { 
+      transform: translateX(26px); 
+    }
+    .loading { 
+      display: inline-block; 
+      width: 16px; 
+      height: 16px; 
+      border: 2px solid var(--border); 
+      border-radius: 50%; 
+      border-top-color: var(--primary); 
+      animation: spin 1s ease-in-out infinite; 
+    }
+    @keyframes spin { 
+      to { transform: rotate(360deg); } 
+    }
+    @media (max-width: 720px) { 
+      .card-row { flex-direction: column; } 
+      .row-between { flex-direction: column; align-items: flex-start; } 
+    }
   </style>
 </head>
 <body>
@@ -72,6 +403,24 @@
 
     <!-- Admin Content (Hidden Initially) -->
     <div id="adminContent" style="display:none;width:100%;">
+      <!-- New: User Analytics Dashboard -->
+      <div class="admin-card">
+        <h3 style="margin:0;color:#3a6ea5;"><i class="fa-solid fa-chart-line"></i> User Analytics</h3>
+        <p class="small muted">Overview of user activity and registrations.</p>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total Users</h4>
+            <p id="totalUsers">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Active Users (24h)</h4>
+            <p id="activeUsers">0</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="signupsChart"></canvas>
+        </div>
+      </div>
       <!-- Row: In Development & Refresh (your existing cards) -->
       <div class="admin-card">
         <div class="card-row" style="align-items:center;justify-content:space-between;">
@@ -186,8 +535,12 @@
         <div><button class="admin-btn secondary" id="closeBlockedModal">Close</button></div>
       </div>
       <p class="small muted">Unblock clients to restore access immediately.</p>
-      <div class="list" id="blockedClientsList" style="margin-top:8px;">
-        <div class="muted">Loading blocked clients…</div>
+      <div class="bulk-actions">
+        <button class="admin-btn secondary" id="selectAllAccounts">Select All</button>
+        <button class="admin-btn warn" id="deleteSelectedAccounts" disabled>Delete Selected</button>
+      </div>
+      <div class="list" id="accountsList" style="margin-top:8px;">
+        <div class="muted">Loading accounts…</div>
       </div>
     </div>
   </div>
@@ -301,6 +654,8 @@
     setupLogsViewer();
     setupClientIPListeners();
     bindModalControls();
+    setupAnalytics();  // New: For analytics dashboard
+    setupBulkActions();  // New: For bulk actions
   }
 
   function setupInDevListener() {
@@ -396,9 +751,12 @@
         const row = document.createElement("div");
         row.className = "row";
         row.innerHTML = `
-          <div style="display:flex;flex-direction:column;">
-            <div style="font-weight:700;">${sanitize(acct.username || acct.name || k)}</div>
-            <div class="muted" style="font-size:0.9rem;">id: ${k}</div>
+          <div style="display:flex;align-items:center;">
+            <input type="checkbox" class="checkbox account-checkbox" data-id="${k}" />
+            <div style="display:flex;flex-direction:column;">
+              <div style="font-weight:700;">${sanitize(acct.username || acct.name || k)}</div>
+              <div class="muted" style="font-size:0.9rem;">id: ${k}</div>
+            </div>
           </div>
           <div style="display:flex;gap:8px;align-items:center;">
             <button class="admin-btn warn" data-delete="${k}"><i class="fa-solid fa-trash"></i> Delete</button>
@@ -506,7 +864,10 @@
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
-        <div><b>${e.ip}</b><br><span class="muted">${expired ? "Expired" : when}</span></div>
+        <div style="display:flex;align-items:center;">
+          <input type="checkbox" class="checkbox blocked-checkbox" data-ip="${e.ip}" />
+          <div><b>${e.ip}</b><br><span class="muted">${expired ? "Expired" : when}</span></div>
+        </div>
         <div>
           <button class="admin-btn secondary" data-unblock="${e.ip}">Unblock</button>
         </div>`;
@@ -534,7 +895,6 @@
     if (Object.keys(updates).length) await update(ref(db, BLOCKED_PATH), updates);
   }
 
-  // ----- Fixed modal controls -----
   function bindModalControls() {
     const modals = [
       { open: openActiveBtn, modal: activeModalEl, close: closeActiveBtnEl },
@@ -543,29 +903,128 @@
     modals.forEach(({ open, modal, close }) => {
       if (!open || !modal || !close) return;
       open.addEventListener("click", () => (modal.style.display = "flex"));
-      close.addEventListener("click", () => (modal.style.display = "none"));
-      modal.addEventListener("click", (ev) => {
-        if (ev.target === modal) modal.style.display = "none";
-      });
-      document.addEventListener("keydown", (ev) => {
-        if (ev.key === "Escape" && modal.style.display === "flex") modal.style.display = "none";
-      });
-    });
-  }
-
-  function sanitize(s) {
-    return String(s || "").replace(/[<>]/g, "");
-  }
-  function encodeKey(k) {
-    return encodeURIComponent(k).replace(/\./g, "%2E");
-  }
-  function timeAgo(ts) {
-    const diff = Date.now() - ts;
-    if (diff < 60e3) return Math.round(diff / 1000) + "s ago";
-    if (diff < 3600e3) return Math.round(diff / 60000) + "m ago";
-    if (diff < 86400e3) return Math.round(diff / 3600000) + "h ago";
-    return Math.round(diff / 86400000) + "d ago";
-  }
-</script>
+          close.addEventListener("click", () => (modal.style.display = "none"));
+          modal.addEventListener("click", (ev) => {
+            if (ev.target === modal) modal.style.display = "none";
+          });
+          document.addEventListener("keydown", (ev) => {
+            if (ev.key === "Escape" && modal.style.display === "flex") modal.style.display = "none";
+          });
+        });
+      }
+      
+      function setupAnalytics() {
+        const accountsRef = ref(db, ACCOUNTS_PATH);
+        const clientsRef = ref(db, CLIENTS_PATH);
+        let signupsData = Array(7).fill(0); // Last 7 days
+        let chart;
+      
+        onValue(accountsRef, (snap) => {
+          const accounts = snap.val() || {};
+          const total = Object.keys(accounts).length;
+          document.getElementById('totalUsers').textContent = total;
+      
+          // Calculate signups per day (assuming accounts have a 'created' timestamp)
+          signupsData = Array(7).fill(0);
+          Object.values(accounts).forEach(acc => {
+            if (acc.created) {
+              const daysAgo = Math.floor((Date.now() - acc.created) / (1000 * 60 * 60 * 24));
+              if (daysAgo >= 0 && daysAgo < 7) signupsData[6 - daysAgo]++;
+            }
+          });
+          updateChart();
+        });
+      
+        onValue(clientsRef, (snap) => {
+          const clients = snap.val() || {};
+          const active = Object.values(clients).filter(c => c.lastSeen && (Date.now() - c.lastSeen) < 86400000).length; // Last 24h
+          document.getElementById('activeUsers').textContent = active;
+        });
+      
+        function updateChart() {
+          const ctx = document.getElementById('signupsChart').getContext('2d');
+          if (chart) chart.destroy();
+          chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['6 days ago', '5 days ago', '4 days ago', '3 days ago', '2 days ago', 'Yesterday', 'Today'],
+              datasets: [{
+                label: 'New Sign-ups',
+                data: signupsData,
+                backgroundColor: 'rgba(74, 79, 207, 0.6)',
+                borderColor: 'rgba(74, 79, 207, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: { beginAtZero: true }
+              }
+            }
+          });
+        }
+      }
+      
+      function setupBulkActions() {
+        // Accounts bulk actions
+        document.getElementById('selectAllAccounts').addEventListener('click', () => {
+          const checkboxes = document.querySelectorAll('.account-checkbox');
+          const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+          checkboxes.forEach(cb => cb.checked = !allChecked);
+          updateBulkButtons();
+        });
+        document.getElementById('deleteSelectedAccounts').addEventListener('click', async () => {
+          const selected = Array.from(document.querySelectorAll('.account-checkbox:checked')).map(cb => cb.dataset.id);
+          if (!selected.length || !confirm(`Delete ${selected.length} accounts?`)) return;
+          for (const id of selected) {
+            await remove(ref(db, `${ACCOUNTS_PATH}/${id}`));
+            logAction("bulk-delete-accounts", { ids: selected });
+          }
+        });
+      
+        // Blocked IPs bulk actions
+        document.getElementById('selectAllBlocked').addEventListener('click', () => {
+          const checkboxes = document.querySelectorAll('.blocked-checkbox');
+          const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+          checkboxes.forEach(cb => cb.checked = !allChecked);
+          updateBulkButtons();
+        });
+        document.getElementById('unblockSelected').addEventListener('click', async () => {
+          const selected = Array.from(document.querySelectorAll('.blocked-checkbox:checked')).map(cb => cb.dataset.ip);
+          if (!selected.length || !confirm(`Unblock ${selected.length} IPs?`)) return;
+          for (const ip of selected) {
+            await set(ref(db, `${BLOCKED_PATH}/${encodeKey(ip)}`), null);
+            logAction("bulk-unblock-ips", { ips: selected });
+          }
+        });
+      
+        function updateBulkButtons() {
+          document.getElementById('deleteSelectedAccounts').disabled = !document.querySelectorAll('.account-checkbox:checked').length;
+          document.getElementById('unblockSelected').disabled = !document.querySelectorAll('.blocked-checkbox:checked').length;
+        }
+      
+        // Update buttons on checkbox change
+        document.addEventListener('change', (e) => {
+          if (e.target.classList.contains('account-checkbox') || e.target.classList.contains('blocked-checkbox')) {
+            updateBulkButtons();
+          }
+        });
+      }
+      
+      function sanitize(s) {
+        return String(s || "").replace(/[<>]/g, "");
+      }
+      function encodeKey(k) {
+        return encodeURIComponent(k).replace(/\./g, "%2E");
+      }
+      function timeAgo(ts) {
+        const diff = Date.now() - ts;
+        if (diff < 60e3) return Math.round(diff / 1000) + "s ago";
+        if (diff < 3600e3) return Math.round(diff / 60000) + "m ago";
+        if (diff < 86400e3) return Math.round(diff / 3600000) + "h ago";
+        return Math.round(diff / 86400000) + "d ago";
+      }
+    </script>
 </body>
 </html>

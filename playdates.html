@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -362,9 +361,10 @@
     <a href="playdates.html" class="active"><i class="fa-solid fa-calendar"></i></a>
     <a href='walks.html'><i class="fa-solid fa-dog"></i></a>
     <a href='index.html'><i class="fa-solid fa-house"></i></a>
-    <a href="pet-net/index.html"><i class="fa-solid fa-user"></i></a>
-    <a href="feedback.html"><i class="fa-solid fa-globe"></i></a>
-    <a href="admin.html"><i class="fa-solid fa-user-shield"></i></a>
+    <a href="pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+    <a href="profiles.html"><i class="fa-solid fa-user"></i></a>
+    <a href="feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
+    <a href="admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -372,7 +372,7 @@
   <script>
     fetch('https://api.ipify.org?format=json')
       .then(r => r.json())
-      .then(data => {
+      .then((data) => {
         const ip = data.ip;
         fetch(`https://pet-paths-default-rtdb.europe-west1.firebasedatabase.app/clients/${ip}.json`, {
           method: 'PUT',
@@ -382,7 +382,7 @@
   </script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, push, onChildAdded, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCMuOymY5KniYJgg51vkhcYWxXeyXAyFk0",
@@ -402,7 +402,6 @@
     let lastHandled = localStorage.getItem("last_refresh_id") || "0";
 
     // Listen for admin/refresh value to trigger reload
-    import { onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
       onValue(ref(db, "admin/refresh"), snap => {
       const data = snap.val();
       if (!data || !data.value) return;
@@ -430,6 +429,16 @@
         return u && u.username ? u.username : null;
       } catch { return null; }
     }
+    // show admin link only for admin
+    (function(){
+      const adminLink = document.getElementById('adminLink');
+      function update() {
+        const u = getCurrentUsername();
+        if (adminLink) adminLink.style.display = (u === 'admin') ? 'flex' : 'none';
+      }
+      update();
+      window.addEventListener('storage', update);
+    })();
 
     function createStatusCard(data, key) {
       const div = document.createElement("div");
@@ -437,7 +446,7 @@
       const mapId = `map-${key}`;
       // Determine if delete button should be shown
       const currentUser = getCurrentUsername();
-      const canDelete = currentUser && (currentUser === "admin" || curentuser === "staff" || currentUser === data.user);
+      const canDelete = currentUser && (currentUser === "admin" || currentUser === "staff" || currentUser === data.user);
       div.innerHTML = `
         <div class="status-card-header">
           <span class="status-type ${data.status.replace(/\s+/g,'-').toLowerCase()}">
@@ -470,7 +479,6 @@
       return div;
     }
     // Delete playdate logic
-    import { remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
     document.addEventListener("click", function(e) {
       if (e.target && (e.target.classList.contains("delete-status-btn") || (e.target.closest && e.target.closest(".delete-status-btn")))) {
         const btn = e.target.classList.contains("delete-status-btn") ? e.target : e.target.closest(".delete-status-btn");
