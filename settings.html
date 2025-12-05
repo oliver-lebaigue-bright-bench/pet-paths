@@ -53,7 +53,7 @@
     }
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -193,16 +193,21 @@
     </div>
   </div>
   <div class="footer">
-    <a class="active" href="settings.html"><i class="fa-solid fa-gear"></i></a>
-    <a href="playdates.html"><i class="fa-solid fa-calendar"></i></a>
-    <a href="walks.html"><i class="fa-solid fa-dog"></i></a>
-    <a href="index.html"><i class="fa-solid fa-house"></i></a>
-    <a href="pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
-    <a href="profiles.html"><i class="fa-solid fa-user"></i></a>
-    <a href="feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
-    <a href="admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
+    <a href="/settings.html" class="active"><i class="fa-solid fa-gear"></i></a>
+    <a href="/playdates.html"><i class="fa-solid fa-calendar"></i></a>
+    <a href="/walks.html"><i class="fa-solid fa-dog"></i></a>
+    <a href="/index.html"><i class="fa-solid fa-house"></i></a>
+    <a href="/pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+    <a href="/profiles.html"><i class="fa-solid fa-user"></i></a>
+    <a href="/feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
+    <a href="/admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
   </div>
   <script>
+    // Theme loader: only set data-theme (no ui.css injection)
+    (function() {
+      const theme = localStorage.getItem('petpaths_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
     // Theme switcher logic
     const themeBtns = document.querySelectorAll('.theme-btn');
     function setTheme(theme) {
@@ -217,14 +222,22 @@
       btn.addEventListener('click', () => setTheme(btn.dataset.theme));
     });
     fetch('https://api.ipify.org?format=json')
-      .then(r => r.json())
+      .then(r => {
+        if (!r.ok) throw new Error('ipify request failed');
+        return r.json();
+      })
       .then(data => {
-        const ip = data.ip;
-        fetch(`https://pet-paths-default-rtdb.europe-west1.firebasedatabase.app/clients/${ip}.json`, {
-          method: 'PUT',
-          body: JSON.stringify({ lastSeen: Date.now() })
-        });
-      });
+        try {
+          const ip = data && data.ip ? String(data.ip) : null;
+          if (!ip) return;
+          fetch(`https://pet-paths-default-rtdb.europe-west1.firebasedatabase.app/clients/${encodeURIComponent(ip)}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lastSeen: Date.now() })
+          }).catch(() => {}); // non-fatal
+        } catch (e) { /* ignore */ }
+      })
+      .catch(() => { /* ignore network/error for telemetry */ });
    // admin link visibility
    (function(){
      const adminLink = document.getElementById('adminLink');

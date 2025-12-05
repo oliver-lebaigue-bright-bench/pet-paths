@@ -118,7 +118,7 @@
 			}
 			body {
 				margin: 0;
-				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+				font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 				background: var(--bg);
 				color: var(--text);
 				display: flex;
@@ -447,13 +447,13 @@
 			window.location.href = "verify.html";
 		}
 	</script>
-	<script>
-		// Theme loader for all pages
-		(function() {
-			const theme = localStorage.getItem('petpaths_theme') || 'light';
-			document.documentElement.setAttribute('data-theme', theme);
-		})();
-	</script>
+		<!-- Theme loader: only set data-theme (no ui.css injection) -->
+		<script>
+			(function() {
+				const theme = localStorage.getItem('petpaths_theme') || 'light';
+				document.documentElement.setAttribute('data-theme', theme);
+			})();
+		</script>
 		<div class="header">
 		<span>Profiles</span>
 		<div class="icons">
@@ -556,16 +556,15 @@
 
 	<!-- Footer -->
 	<div class="footer">
-        <a href="settings.html"><i class="fa-solid fa-gear"></i></a>
-        <a href="playdates.html"><i class="fa-solid fa-calendar"></i></a>
-        <a href='walks.html'><i class="fa-solid fa-dog"></i></a>
-        <a href='index.html'><i class="fa-solid fa-house"></i></a>
-        <a href="pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
-        <a href="profiles.html" class="active"><i class="fa-solid fa-user"></i></a>
-        <a href="feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
-        <!-- admin link: hidden by default; shown only for logged-in "admin" -->
-        <a href="admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
-    </div>
+    <a href="/settings.html"><i class="fa-solid fa-gear"></i></a>
+    <a href="/playdates.html"><i class="fa-solid fa-calendar"></i></a>
+    <a href="/walks.html"><i class="fa-solid fa-dog"></i></a>
+    <a href="/index.html"><i class="fa-solid fa-house"></i></a>
+    <a href="/pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+    <a href="/profiles.html" class="active"><i class="fa-solid fa-user"></i></a>
+    <a href="/feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
+    <a href="/admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
+  </div>
 
 	<!-- Message Modal -->
 	<div id="messageModal" class="modal hidden" aria-modal="true" role="dialog" aria-labelledby="messageModalTitle">

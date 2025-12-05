@@ -1,0 +1,282 @@
+/* Global UI polish: typography, cards, buttons, subtle shadows */
+:root{
+  --ui-font-family: "Inter", "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --ui-heading-family: "Inter", "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --ui-mono-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  --ui-font-size-base: 16px;
+  --ui-font-scale: 1.125; /* modular scale for headings */
+  --ui-radius: 12px;
+  --ui-ease: 0.18s;
+  --ui-card-shadow: 0 8px 30px rgba(16,24,40,0.06);
+  --ui-muted: #6b7280;
+  --ui-focus: 0 8px 20px rgba(74,79,207,0.12);
+  --max-content-width: 980px;
+  --ui-gap: 16px;
+  --ui-border: rgba(15,23,42,0.06);
+}
+
+/* === Font loading & typography variables === */
+/* Import Google fonts with font-display:swap for better UX */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Roboto:wght@400;500;700&display=swap');
+
+/* font stack */
+html,body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+/* helpful container */
+.container-wide { max-width: var(--max-content-width); margin: 0 auto; padding: 0 20px; }
+
+/* card */
+.card, .admin-card, .profile-card, .feed-post {
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-card-shadow);
+  border: 1px solid var(--ui-border);
+  transition: transform var(--ui-ease) ease, box-shadow var(--ui-ease) ease;
+  background: var(--card-bg, #fff);
+}
+.card:hover, .admin-card:hover, .profile-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(16,24,40,0.10);
+}
+
+/* primary button */
+.btn, .admin-btn, .auth-footer-btn, .email-button, .github-btn, .whatsapp-btn {
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  text-decoration: none;
+}
+.btn:active, .admin-btn:active { transform: translateY(0); }
+.btn:focus, .admin-btn:focus { outline: none; box-shadow: var(--ui-focus); }
+
+/* subtle utility classes */
+.muted, .small { color: var(--ui-muted); font-size: 0.95rem; }
+.lead { font-size: 1.05rem; color: var(--text); }
+
+/* inputs & textareas */
+input[type="text"], input[type="password"], input[type="url"], textarea, select {
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.08);
+  padding: 8px 10px;
+  transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+input:focus, textarea:focus, select:focus {
+  box-shadow: var(--ui-focus);
+  border-color: rgba(74,79,207,0.6);
+  outline: none;
+}
+
+/* modal refinements */
+.modal .modal-content {
+  border-radius: calc(var(--ui-radius) + 8px);
+  padding: 22px;
+}
+
+/* improved footer icons spacing */
+.footer a { padding: 12px 6px; }
+
+/* responsive tweaks */
+@media (max-width: 860px) {
+  .container-wide { padding: 0 14px; }
+  .card, .admin-card { border-radius: 10px; }
+}
+
+/* lightweight helpers for contrast & accessibility */
+.sr-only { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+
+/* apply the type system */
+html { font-size: var(--ui-font-size-base); -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--ui-font-family);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--text, #111);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === Replace global-star override with targeted base controls & title system === */
+
+/* Base controls: apply site font to common text containers and controls (avoids overriding headings via *) */
+:where(html, body, .container, .content, input, textarea, select, button, a, p, li, span) {
+  font-family: var(--ui-font-family) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Title / typography tokens (edit here to change title styling site-wide) */
+:root{
+  --title-font-family: var(--ui-heading-family);
+  --title-color: var(--text, #111);
+  --title-weight: 800;
+  --title-line-height: 1.12;
+  --h1-size: calc(var(--ui-font-size-base) * 1.75);
+  --h2-size: calc(var(--ui-font-size-base) * 1.25);
+  --h3-size: calc(var(--ui-font-size-base) * 1.05);
+  --p-size: 1rem;
+}
+
+/* Element-level title styles — can be overridden per-page with higher-specificity rules or inline styles */
+h1, .display {
+  font-family: var(--title-font-family);
+  font-weight: var(--title-weight);
+  font-size: var(--h1-size);
+  line-height: var(--title-line-height);
+  color: var(--title-color);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35em;
+}
+
+h2 {
+  font-family: var(--title-font-family);
+  font-weight: 700;
+  font-size: var(--h2-size);
+  line-height: 1.18;
+  color: var(--title-color);
+  margin: 0 0 0.45em;
+}
+
+h3 {
+  font-family: var(--title-font-family);
+  font-weight: 600;
+  font-size: var(--h3-size);
+  line-height: 1.2;
+  color: var(--title-color);
+  margin: 0 0 0.35em;
+}
+
+/* Paragraph baseline */
+p {
+  font-size: var(--p-size);
+  margin: 0 0 0.9em;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+/* Utility classes for title variations */
+.title { font-family: var(--title-font-family); color: var(--title-color); margin: 0; }
+.title--large { font-size: calc(var(--h1-size) * 1.12); font-weight: 900; }
+.title--medium { font-size: var(--h2-size); font-weight: 700; }
+.subtitle { font-size: 0.95rem; color: var(--ui-muted); font-weight: 600; letter-spacing: 0.01em; }
+
+/* Cards: enforce card background, radius, shadow */
+.card, .admin-card, .profile-card, .feed-post, .modal, .modal-content {
+  background: var(--card-bg, #fff) !important;
+  color: var(--card-text, var(--text)) !important;
+  border-radius: var(--ui-radius) !important;
+  box-shadow: var(--ui-card-shadow) !important;
+  border: 1px solid var(--ui-border) !important;
+}
+
+/* Buttons (primary appearance) */
+button, .btn, .admin-btn, .theme-btn, .auth-footer-btn, .email-button, .github-btn, .whatsapp-btn, .admin-card .admin-btn {
+  font-family: var(--ui-font-family) !important;
+  background-color: var(--primary) !important;
+  color: var(--btn-text) !important;
+  border-radius: 10px !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.06) !important;
+}
+
+/* Secondary button style override */
+button.secondary, .admin-btn.secondary, .btn.secondary {
+  background: transparent !important;
+  color: var(--text) !important;
+  border: 1px solid var(--ui-border) !important;
+}
+
+/* Form elements: inputs, textareas, selects */
+input, textarea, select {
+  font-family: var(--ui-font-family) !important;
+  color: var(--text) !important;
+  background: var(--card-bg) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(15,23,42,0.08) !important;
+}
+
+/* Footer links */
+.footer a {
+  font-family: var(--ui-font-family) !important;
+  color: black !important;
+}
+
+/* Ensure small inline styles like homeBanner use site font */
+#homeBanner, #homeBanner * {
+  font-family: var(--ui-font-family) !important;
+}
+
+/* Accessibility: prefer reduced motion still respected */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* Centering fixes and utilities
+   - Ensure top-level content areas and common cards are centered horizontally.
+   - Provide .center-block utility for one-off centering needs.
+*/
+.content,
+.container,
+.container-wide {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;      /* horizontally center child blocks */
+  justify-content: flex-start !important;
+  text-align: center !important;
+  gap: var(--ui-gap) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Ensure common list/feed containers center their children */
+#statusList, #profileList, #feed, #statusList > *, #profileList > *, #feed > * {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Make direct content children (cards, lists) constrained and centered */
+.content > .admin-card,
+.content > .settings-card,
+.content > .feedback-card,
+.content > .profile-card,
+.content > .card,
+.content > .feed-post,
+.container-wide > * {
+  max-width: var(--max-content-width) !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
+/* Utility: center children inside any element */
+.center-children {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+/* Small-screen safety: ensure full-width stacked content stays centered */
+@media (max-width: 860px) {
+  .content, .container, .container-wide {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+  .content > .admin-card,
+  .content > .settings-card,
+  .content > .feedback-card,
+  .content > .profile-card,
+  .content > .card,
+  .content > .feed-post {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* End centering fixes */

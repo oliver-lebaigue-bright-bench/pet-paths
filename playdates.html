@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css"/>
-  <script src="middleware.js"></script>
   <style>
     :root {
       --primary: #4a4fcf;
@@ -65,7 +64,7 @@
     }
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
       display: flex;
@@ -254,7 +253,7 @@
     }
   </script>
   <script>
-    // Theme loader for all pages
+    // Theme loader: only set data-theme (no ui.css injection)
     (function() {
       const theme = localStorage.getItem('petpaths_theme') || 'light';
       document.documentElement.setAttribute('data-theme', theme);
@@ -358,14 +357,14 @@
 
   <!-- Footer -->
   <div class="footer">
-    <a href="settings.html"><i class="fa-solid fa-gear"></i></a>
-    <a href="playdates.html" class="active"><i class="fa-solid fa-calendar"></i></a>
-    <a href='walks.html'><i class="fa-solid fa-dog"></i></a>
-    <a href='index.html'><i class="fa-solid fa-house"></i></a>
-    <a href="pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
-    <a href="profiles.html"><i class="fa-solid fa-user"></i></a>
-    <a href="feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
-    <a href="admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
+    <a href="/settings.html"><i class="fa-solid fa-gear"></i></a>
+    <a href="/playdates.html" class="active"><i class="fa-solid fa-calendar"></i></a>
+    <a href="/walks.html"><i class="fa-solid fa-dog"></i></a>
+    <a href="/index.html"><i class="fa-solid fa-house"></i></a>
+    <a href="/pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+    <a href="/profiles.html"><i class="fa-solid fa-user"></i></a>
+    <a href="/feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
+    <a href="/admin.html" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

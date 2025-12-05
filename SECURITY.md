@@ -1,49 +1,56 @@
 # Security Policy
 
-## Reporting a Vulnerability
+Thank you for taking the time to responsibly disclose potential security issues. This document explains how to report a vulnerability and what to expect.
 
-If you discover a security vulnerability in this project, please report it to us as soon as possible. We take the security of our users and their data very seriously.
+## Reporting a vulnerability
 
-## How to Report a Vulnerability
+To report a vulnerability, please email us at [oliverlebaigue@gmail.com](mailto:oliverlebaigue@gmail.com). In your email, please include the following information:
 
-To report a vulnerability, please email us at oliverlebaigue@gmail.com. Please include as much detail as possible about the vulnerability, including:
+- Subject line: [Pet Paths] Security report
+- Short summary of the issue
+- Step-by-step reproduction (minimal steps)
+- Proof-of-concept (safe, non-destructive)
+- Affected URL(s) and timeframe
+- Your contact details (optional)
 
-* A description of the vulnerability
-* Steps to reproduce the vulnerability
-* Any relevant code or configuration files
+## Safe handling and expectations
 
-## What to Expect
+When reporting a vulnerability, please adhere to the following guidelines:
 
-Once we receive your report, we will:
+- Do not exploit the issue beyond proof-of-concept. Do not access, modify, or delete data that is not yours.
+- Avoid disclosing user personal data when demonstrating a bug; redact private information.
+- You will receive an acknowledgment within 72 hours.
+- We aim to triage and respond with remediation guidance or next steps within 14 calendar days.
+- Critical fixes will be prioritized and coordinated with the reporter where practical.
 
-* Acknowledge receipt of your report within 24 hours
-* Investigate the vulnerability and determine its severity
-* Develop a plan to fix the vulnerability
-* Implement the fix and verify that it resolves the issue
-* Notify you of the fix and provide any necessary instructions for updating your code
+## Scope
 
-## Disclosure Policy
+The scope of this security policy includes:
 
-We will disclose vulnerabilities to the public once they have been fixed and verified. We will also provide credit to the reporter in our disclosure, unless they request otherwise.
+- **In-scope**: Web frontend pages, Firebase Realtime Database references, admin UI features, and public endpoints used by the frontend.
+- **Out-of-scope**: Third-party services, browsers, platform vulnerabilities outside the project code, or private hosting infrastructure not controlled by this repository.
 
-## Security Best Practices
+## Severity and disclosure
 
-We follow industry-standard security best practices to ensure the security of our users and their data. These include:
+We follow a coordinated disclosure process:
 
-* Using secure protocols for communication (HTTPS)
-* Validating and sanitizing user input
-* Using secure password storage and authentication mechanisms
-* Regularly updating dependencies and patching vulnerabilities
-* Implementing access controls and auditing mechanisms
+- Public disclosure will only happen after the issue has been fixed or mutually agreed timelines have elapsed.
+- Reporters who request it will be credited in advisories unless they request anonymity.
 
-## Compliance
+## Safe-harbor
 
-We comply with all relevant laws and regulations related to security and data protection, including:
+Reporters acting in good faith to help secure the project will be treated with respect and will not face legal action from the project maintainers for the tested activity (within the scope defined above).
 
-* General Data Protection Regulation (GDPR)
-* Payment Card Industry Data Security Standard (PCI DSS)
-* Health Insurance Portability and Accountability Act (HIPAA)
+## Handling of personal data
 
-## Contact Us
+The repository contains minimal client-side references to a Firebase project; this project stores user-submitted data. If your report involves personal data exposure, please indicate that in your report so we can prioritize remediation.
 
-If you have any questions or concerns about our security policy, please don't hesitate to contact us at oliverlebaigue@gmail.com.
+## PGP / encrypted reporting
+
+If you prefer encrypted reporting, please request a PGP key at [oliverlebaigue@gmail.com](mailto:oliverlebaigue@gmail.com), and we will provide a key for secure communication.
+
+## Contact
+
+For any questions or concerns, please contact us at [oliverlebaigue@gmail.com](mailto:oliverlebaigue@gmail.com).
+
+Thank you for helping keep Pet Paths safer.

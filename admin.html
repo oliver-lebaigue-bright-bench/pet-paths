@@ -54,7 +54,7 @@
     }
     body { 
       margin: 0; 
-      font-family: 'Inter', Arial, sans-serif; 
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       background: var(--bg); 
       color: var(--text); 
       display: flex; 
@@ -377,7 +377,7 @@
 </head>
 <body>
   <script>
-    // Theme loader (keeps your existing behaviour)
+    // Theme loader: only set data-theme (no ui.css injection)
     (function() {
       const theme = localStorage.getItem('petpaths_theme') || 'light';
       document.documentElement.setAttribute('data-theme', theme);
@@ -546,13 +546,14 @@
   </div>
 
   <div class="footer">
-    <a href="settings.html"><i class="fa-solid fa-gear"></i></a>
-    <a href="playdates.html"><i class="fa-solid fa-calendar"></i></a>
-    <a href="walks.html"><i class="fa-solid fa-dog"></i></a>
-    <a href="index.html"><i class="fa-solid fa-house"></i></a>
-    <a href="pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
-    <a href="feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
-    <a class="active" href="admin.html"><i class="fa-solid fa-user-shield"></i></a>
+    <a href="/settings.html"><i class="fa-solid fa-gear"></i></a>
+    <a href="/playdates.html"><i class="fa-solid fa-calendar"></i></a>
+    <a href="/walks.html"><i class="fa-solid fa-dog"></i></a>
+    <a href="/index.html"><i class="fa-solid fa-house"></i></a>
+    <a href="/pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+    <a href="/profiles.html"><i class="fa-solid fa-user"></i></a>
+    <a href="/feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
+    <a href="/admin.html" id="adminLink" class="active" style="display:flex;"><i class="fa-solid fa-user-shield"></i></a>
   </div>
 
  <script type="module">

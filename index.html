@@ -55,7 +55,7 @@
 	}
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       display: flex;
@@ -254,9 +254,20 @@
       }
     }
     .name {
-      font-family: "BBH Sans Hegarty", sans-serif;
-      font-weight: 400;
-      font-style: normal;
+      font-family: var(--ui-heading-family);
+      font-weight: 700;
+      font-size: clamp(1.6rem, 6vw, 2.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      /* gradient text using theme tokens */
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 8px 30px rgba(74,79,207,0.12);
+      margin: 6px 0 10px;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 8px;
     }
     .whatsapp-btn {
       display: inline-flex;
@@ -369,21 +380,11 @@
     }
   </script>
   <script>
-      // Theme loader for all pages
+      // Theme loader: only set data-theme (no ui.css injection)
       (function() {
         const theme = localStorage.getItem('petpaths_theme') || 'light';
         document.documentElement.setAttribute('data-theme', theme);
       })();
-
-    fetch('https://api.ipify.org?format=json')
-      .then(r => r.json())
-      .then((data) => {
-        const ip = data.ip;
-        fetch(`https://pet-paths-default-rtdb.europe-west1.firebasedatabase.app/clients/${ip}.json`, {
-          method: 'PUT',
-          body: JSON.stringify({ lastSeen: Date.now() })
-        });
-      });
     </script>
   <div class="container">
     <h2>Welcome to</h2> 
