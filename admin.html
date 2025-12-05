@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Control Panel - Pet Paths</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     /* --- Enhanced Styles --- */
     @media (max-width: 600px) {
@@ -402,6 +403,24 @@
 
     <!-- Admin Content (Hidden Initially) -->
     <div id="adminContent" style="display:none;width:100%;">
+      <!-- New: User Analytics Dashboard -->
+      <div class="admin-card">
+        <h3 style="margin:0;color:#3a6ea5;"><i class="fa-solid fa-chart-line"></i> User Analytics</h3>
+        <p class="small muted">Overview of user activity and registrations.</p>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total Users</h4>
+            <p id="totalUsers">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Active Users (24h)</h4>
+            <p id="activeUsers">0</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="signupsChart"></canvas>
+        </div>
+      </div>
       <!-- Row: In Development & Refresh (your existing cards) -->
       <div class="admin-card">
         <div class="card-row" style="align-items:center;justify-content:space-between;">
@@ -516,8 +535,12 @@
         <div><button class="admin-btn secondary" id="closeBlockedModal">Close</button></div>
       </div>
       <p class="small muted">Unblock clients to restore access immediately.</p>
-      <div class="list" id="blockedClientsList" style="margin-top:8px;">
-        <div class="muted">Loading blocked clients…</div>
+      <div class="bulk-actions">
+        <button class="admin-btn secondary" id="selectAllAccounts">Select All</button>
+        <button class="admin-btn warn" id="deleteSelectedAccounts" disabled>Delete Selected</button>
+      </div>
+      <div class="list" id="accountsList" style="margin-top:8px;">
+        <div class="muted">Loading accounts…</div>
       </div>
     </div>
   </div>
@@ -631,6 +654,8 @@
     setupLogsViewer();
     setupClientIPListeners();
     bindModalControls();
+    setupAnalytics();  // New: For analytics dashboard
+    setupBulkActions();  // New: For bulk actions
   }
 
   function setupInDevListener() {
@@ -726,9 +751,12 @@
         const row = document.createElement("div");
         row.className = "row";
         row.innerHTML = `
-          <div style="display:flex;flex-direction:column;">
-            <div style="font-weight:700;">${sanitize(acct.username || acct.name || k)}</div>
-            <div class="muted" style="font-size:0.9rem;">id: ${k}</div>
+          <div style="display:flex;align-items:center;">
+            <input type="checkbox" class="checkbox account-checkbox" data-id="${k}" />
+            <div style="display:flex;flex-direction:column;">
+              <div style="font-weight:700;">${sanitize(acct.username || acct.name || k)}</div>
+              <div class="muted" style="font-size:0.9rem;">id: ${k}</div>
+            </div>
           </div>
           <div style="display:flex;gap:8px;align-items:center;">
             <button class="admin-btn warn" data-delete="${k}"><i class="fa-solid fa-trash"></i> Delete</button>
@@ -836,7 +864,10 @@
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
-        <div><b>${e.ip}</b><br><span class="muted">${expired ? "Expired" : when}</span></div>
+        <div style="display:flex;align-items:center;">
+          <input type="checkbox" class="checkbox blocked-checkbox" data-ip="${e.ip}" />
+          <div><b>${e.ip}</b><br><span class="muted">${expired ? "Expired" : when}</span></div>
+        </div>
         <div>
           <button class="admin-btn secondary" data-unblock="${e.ip}">Unblock</button>
         </div>`;
@@ -864,7 +895,6 @@
     if (Object.keys(updates).length) await update(ref(db, BLOCKED_PATH), updates);
   }
 
-  // ----- Fixed modal controls -----
   function bindModalControls() {
     const modals = [
       { open: openActiveBtn, modal: activeModalEl, close: closeActiveBtnEl },
@@ -873,29 +903,128 @@
     modals.forEach(({ open, modal, close }) => {
       if (!open || !modal || !close) return;
       open.addEventListener("click", () => (modal.style.display = "flex"));
-      close.addEventListener("click", () => (modal.style.display = "none"));
-      modal.addEventListener("click", (ev) => {
-        if (ev.target === modal) modal.style.display = "none";
-      });
-      document.addEventListener("keydown", (ev) => {
-        if (ev.key === "Escape" && modal.style.display === "flex") modal.style.display = "none";
-      });
-    });
-  }
-
-  function sanitize(s) {
-    return String(s || "").replace(/[<>]/g, "");
-  }
-  function encodeKey(k) {
-    return encodeURIComponent(k).replace(/\./g, "%2E");
-  }
-  function timeAgo(ts) {
-    const diff = Date.now() - ts;
-    if (diff < 60e3) return Math.round(diff / 1000) + "s ago";
-    if (diff < 3600e3) return Math.round(diff / 60000) + "m ago";
-    if (diff < 86400e3) return Math.round(diff / 3600000) + "h ago";
-    return Math.round(diff / 86400000) + "d ago";
-  }
-</script>
+          close.addEventListener("click", () => (modal.style.display = "none"));
+          modal.addEventListener("click", (ev) => {
+            if (ev.target === modal) modal.style.display = "none";
+          });
+          document.addEventListener("keydown", (ev) => {
+            if (ev.key === "Escape" && modal.style.display === "flex") modal.style.display = "none";
+          });
+        });
+      }
+      
+      function setupAnalytics() {
+        const accountsRef = ref(db, ACCOUNTS_PATH);
+        const clientsRef = ref(db, CLIENTS_PATH);
+        let signupsData = Array(7).fill(0); // Last 7 days
+        let chart;
+      
+        onValue(accountsRef, (snap) => {
+          const accounts = snap.val() || {};
+          const total = Object.keys(accounts).length;
+          document.getElementById('totalUsers').textContent = total;
+      
+          // Calculate signups per day (assuming accounts have a 'created' timestamp)
+          signupsData = Array(7).fill(0);
+          Object.values(accounts).forEach(acc => {
+            if (acc.created) {
+              const daysAgo = Math.floor((Date.now() - acc.created) / (1000 * 60 * 60 * 24));
+              if (daysAgo >= 0 && daysAgo < 7) signupsData[6 - daysAgo]++;
+            }
+          });
+          updateChart();
+        });
+      
+        onValue(clientsRef, (snap) => {
+          const clients = snap.val() || {};
+          const active = Object.values(clients).filter(c => c.lastSeen && (Date.now() - c.lastSeen) < 86400000).length; // Last 24h
+          document.getElementById('activeUsers').textContent = active;
+        });
+      
+        function updateChart() {
+          const ctx = document.getElementById('signupsChart').getContext('2d');
+          if (chart) chart.destroy();
+          chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: ['6 days ago', '5 days ago', '4 days ago', '3 days ago', '2 days ago', 'Yesterday', 'Today'],
+              datasets: [{
+                label: 'New Sign-ups',
+                data: signupsData,
+                backgroundColor: 'rgba(74, 79, 207, 0.6)',
+                borderColor: 'rgba(74, 79, 207, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: { beginAtZero: true }
+              }
+            }
+          });
+        }
+      }
+      
+      function setupBulkActions() {
+        // Accounts bulk actions
+        document.getElementById('selectAllAccounts').addEventListener('click', () => {
+          const checkboxes = document.querySelectorAll('.account-checkbox');
+          const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+          checkboxes.forEach(cb => cb.checked = !allChecked);
+          updateBulkButtons();
+        });
+        document.getElementById('deleteSelectedAccounts').addEventListener('click', async () => {
+          const selected = Array.from(document.querySelectorAll('.account-checkbox:checked')).map(cb => cb.dataset.id);
+          if (!selected.length || !confirm(`Delete ${selected.length} accounts?`)) return;
+          for (const id of selected) {
+            await remove(ref(db, `${ACCOUNTS_PATH}/${id}`));
+            logAction("bulk-delete-accounts", { ids: selected });
+          }
+        });
+      
+        // Blocked IPs bulk actions
+        document.getElementById('selectAllBlocked').addEventListener('click', () => {
+          const checkboxes = document.querySelectorAll('.blocked-checkbox');
+          const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+          checkboxes.forEach(cb => cb.checked = !allChecked);
+          updateBulkButtons();
+        });
+        document.getElementById('unblockSelected').addEventListener('click', async () => {
+          const selected = Array.from(document.querySelectorAll('.blocked-checkbox:checked')).map(cb => cb.dataset.ip);
+          if (!selected.length || !confirm(`Unblock ${selected.length} IPs?`)) return;
+          for (const ip of selected) {
+            await set(ref(db, `${BLOCKED_PATH}/${encodeKey(ip)}`), null);
+            logAction("bulk-unblock-ips", { ips: selected });
+          }
+        });
+      
+        function updateBulkButtons() {
+          document.getElementById('deleteSelectedAccounts').disabled = !document.querySelectorAll('.account-checkbox:checked').length;
+          document.getElementById('unblockSelected').disabled = !document.querySelectorAll('.blocked-checkbox:checked').length;
+        }
+      
+        // Update buttons on checkbox change
+        document.addEventListener('change', (e) => {
+          if (e.target.classList.contains('account-checkbox') || e.target.classList.contains('blocked-checkbox')) {
+            updateBulkButtons();
+          }
+        });
+      }
+      
+      function sanitize(s) {
+        return String(s || "").replace(/[<>]/g, "");
+      }
+      function encodeKey(k) {
+        return encodeURIComponent(k).replace(/\./g, "%2E");
+      }
+      function timeAgo(ts) {
+        const diff = Date.now() - ts;
+        if (diff < 60e3) return Math.round(diff / 1000) + "s ago";
+        if (diff < 3600e3) return Math.round(diff / 60000) + "m ago";
+        if (diff < 86400e3) return Math.round(diff / 3600000) + "h ago";
+        return Math.round(diff / 86400000) + "d ago";
+      }
+    </script>
 </body>
 </html>
