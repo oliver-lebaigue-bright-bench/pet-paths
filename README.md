@@ -1,49 +1,105 @@
 # Pet Paths
 
-[![Static-Site](https://img.shields.io/badge/type-static%20frontend-blue)](README.md)
+[![Static Site](https://img.shields.io/badge/type-static_frontend-blue)](README.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths)
-[![Issues](https://img.shields.io/github/issues/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/oliver-lebaigue-bright-bench/pet-paths)](https://github.com/oliver-lebaigue-bright-bench/pet-paths)
+[![Issues](https://img.shields.io/github/issues/oliver-lebaigue-bright-bench/pet-paths)](https://github.com/oliver-lebaigue-bright-bench/pet-paths/issues)
 [![Security Policy](https://img.shields.io/badge/security-policy-important)](SECURITY.md)
 
-Pet Paths is a lightweight, community-focused web application for sharing dog walks, local pet profiles, and short social posts.  
-This repository contains the static frontend, along with optional Firebase integration for real-time data.
+Pet Paths is a lightweight, static web application for sharing dog walks, local pet profiles, and short pet-related posts.  
+It is designed to be simple, privacy-respecting, and easily hosted on any static platform.
+
+This repository contains **only the frontend**. Optional dynamic features use **Firebase Realtime Database**.
 
 ---
 
 ## Overview
 
-Pet Paths is designed to be simple, privacy-respecting, and easy to self-host.  
-The site uses basic HTML, CSS and JS, with Firebase Realtime Database used only where dynamic features are needed.
+Pet Paths provides:
+- Walk sharing  
+- Playdate listings  
+- Short pet-net feed posts  
+- Pet profile pages  
+- Optional login and account linkage  
+- Basic admin tools  
 
-This repository includes:
-
-- Main static pages: `index.html`, `walks.html`, `profiles.html`, `admin.html`, etc.  
-- Pet-Net subsite under `/pet-net/`  
-- Light, optional client-side auth  
-- No build system required  
-- Ready to host anywhere that serves static files
+Everything runs using plain HTML, CSS and JavaScript — no frameworks or build system required.
 
 ---
 
-## Quick Start (Development)
+## Firebase Notes
 
-Open the repository in the included development container (Ubuntu 24.04) or any local environment.
+The frontend includes a Firebase configuration for dynamic features.
 
-### Serve locally
+Important notes:
+- Client-side Firebase keys **are not secret**  
+- Never commit Firebase service-account credentials  
+- Update your own Firebase config if self-hosting  
+- Ensure secure Firebase Realtime Database Rules in your project  
 
-**Python 3 (recommended):**
+---
 
-python3 -m http.server 8080
+## Repository Structure
 
-Then visit:
+/
+├── index.html
+├── walks.html
+├── profiles.html
+├── admin.html
+├── pet-net/
+│ ├── styles.css
+│ └── script.js
+├── TERMS_OF_SERVICE.md
+├── ACCEPTABLE_USAGE_POLICY.md
+├── PRIVACY.md
+├── SECURITY.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+└── LICENSE
 
-http://localhost:8080
+---
 
+## Policies
 
-Node (http-server):
+Please review these documents before contributing or deploying:
 
-npx http-server -p 8080
+- **[Terms of Service](TERMS_OF_SERVICE.md)**  
+- **[Acceptable Use Policy](ACCEPTABLE_USAGE_POLICY.md)**  
+- **[Privacy Policy](PRIVACY.md)**  
+- **[Security Policy](SECURITY.md)**  
+- **[Code Of Conduct](CODE_OF_CONDUCT.md)**  
+- **[Contributing](CONTRIBUTING.md)**  
+- **[Lisence](LISENCE)**  
 
+---
 
-No compilation or bundling required.
+## Contributing
+
+Contributions are welcome.  
+When opening pull requests:
+
+- Keep changes small and focused  
+- Include screenshots for UI-related changes  
+- Avoid adding personal or sensitive data to examples  
+- Follow the AUP and Security Policy  
+
+---
+
+## Security
+
+To report a vulnerability, follow the responsible disclosure process:  
+**[SECURITY.md](SECURITY.md)**
+
+---
+
+## License
+
+Pet Paths is released under the **MIT License**.  
+See the `LICENSE` file for full details.
+
+---
+
+## Contact
+
+Questions, suggestions, or security reports:  
+**oliverlebaigue@gmail.com**

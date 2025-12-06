@@ -1,14 +1,12 @@
 # Pet Paths — Privacy Policy
 
 [![Document](https://img.shields.io/badge/document-privacy_policy-blue)](PRIVACY.md)
-[![Static-Site](https://img.shields.io/badge/type-static_frontend-blue)](README.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths)
+[![Last Commit](https://img.shields.io/github/last-commit/oliver-lebaigue-bright-bench/pet-paths)](https://github.com/oliver-lebaigue-bright-bench/pet-paths)
 
 _Last updated: 2025-12-05_
 
-This Privacy Policy explains how Pet Paths handles personal data.  
-Pet Paths aims to collect as little information as possible while enabling community features.
+This Privacy Policy explains how Pet Paths handles personal information.
 
 Related documents:  
 [Terms of Service](TERMS_OF_SERVICE.md) •  
@@ -17,83 +15,77 @@ Related documents:
 
 ---
 
-## 1. Data We Collect
+## 1. Data Collected
 
-### 1.1 User Content
+### 1.1 User Content  
 You may submit:
 - Walks  
 - Pet profiles  
 - Short posts  
-- Optional account credentials  
+- Account credentials (username + hashed password)  
 
-### 1.2 Account Information
-Stored data includes:
-- Username  
-- Encrypted password  
-- Linked content  
-
-### 1.3 Technical Metadata
+### 1.2 Automatic Data  
 Firebase may log:
 - IP addresses  
-- Browser/device info  
+- Browser or device info  
 - Timestamps  
 
 ---
 
 ## 2. How Data Is Used
 Data is used to:
-- Display posts and profiles  
-- Enable login  
+- Display your posts and pet profiles  
+- Provide login functionality  
 - Support moderation  
 
 Pet Paths does **not**:
-- Sell data  
-- Track users  
-- Share data with advertisers  
+- Sell personal data  
+- Use advertising trackers  
+- Profile users  
 
 ---
 
 ## 3. Third-Party Services
-Pet Paths uses Firebase; they process some metadata automatically.  
-See Google/Firebase privacy docs for details.
+Pet Paths uses **Firebase**, which processes certain metadata.  
+Firebase has its own privacy policy.
 
 ---
 
-## 4. Public Content
-Avoid posting sensitive personal information.  
-Do not include private data in security reports.
+## 4. Public Posts
+Your public posts are visible to others.  
+Avoid submitting sensitive personal information.
 
 ---
 
 ## 5. Security
-Includes:
+Pet Paths uses:
+- Hashed passwords  
 - Firebase rules  
-- Password hashing  
-- Moderation tools  
+- Basic moderation tools  
 
-See [SECURITY.md](SECURITY.md) for reporting issues.
+Report vulnerabilities via [SECURITY.md](SECURITY.md).
 
 ---
 
 ## 6. Data Retention
-Data is stored until:
+Data stays until:
 - You delete it  
-- Moderators remove it  
 - Your account is removed  
+- Moderators remove it for policy violations  
 
 ---
 
 ## 7. Children’s Privacy
-Pet Paths does not knowingly collect data from children without consent.  
-Parents may request data deletion.
+The service does not knowingly collect data from children without consent.  
+Parents may request deletion.
 
 ---
 
 ## 8. Changes
-This policy may be updated. Continued use after updates implies acceptance.
+Policy updates will be posted.  
+Continued use after changes implies acceptance.
 
 ---
 
 ## 9. Contact
-For privacy questions or data requests:  
-**oliverlebaigue@gmail.com**
+Email: **oliverlebaigue@gmail.com**

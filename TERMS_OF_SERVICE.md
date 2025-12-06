@@ -3,11 +3,11 @@ _Last updated: 2025-12-05_
 
 [![Document](https://img.shields.io/badge/document-terms_of_service-blue)](TERMS_OF_SERVICE.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths)
-[![Issues](https://img.shields.io/github/issues/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/oliver-lebaigue-bright-bench/pet-paths)](https://github.com/oliver-lebaigue-bright-bench/pet-paths)
+[![Issues](https://img.shields.io/github/issues/oliver-lebaigue-bright-bench/pet-paths)](https://github.com/oliver-lebaigue-bright-bench/pet-paths/issues)
 
-Welcome! These Terms of Service (“Terms”) govern your use of **Pet Paths**, a community application for sharing dog walks, playdates, and pet-related posts.  
-By using the Service, you agree to these Terms. If you do not agree, you should not use the Service.
+Welcome! These Terms govern your use of **Pet Paths**, a community application for sharing dog walks, playdates, and short pet posts.  
+Using the Service means you agree to these Terms.
 
 Related documents:  
 [Acceptable Use Policy](ACCEPTABLE_USAGE_POLICY.md) •  
@@ -17,24 +17,24 @@ Related documents:
 ---
 
 ## 1. Who We Are
-Pet Paths is a community-focused web application maintained by a single developer.  
-Contact: **oliverlebaigue@gmail.com**
+Pet Paths is maintained by a single developer.  
+For questions: **oliverlebaigue@gmail.com**
 
 ---
 
 ## 2. Accepting the Terms
-By using the Service, you agree to:
+By using Pet Paths, you agree to:
 - These Terms  
 - The [Acceptable Use Policy](ACCEPTABLE_USAGE_POLICY.md)  
-- Any other referenced policies
+- Any referenced policies, including the Privacy and Security documents  
 
-If you disagree, discontinue use.
+If you disagree, you must stop using the Service.
 
 ---
 
 ## 3. Use of the Service
-The Service may be used for lawful, personal, non-commercial purposes.  
-Pet Paths is a static frontend using optional Firebase Realtime Database features.
+You may use the Service for lawful, personal, non-commercial purposes.  
+Pet Paths uses a static frontend with optional Firebase Realtime Database access.
 
 ---
 
@@ -42,42 +42,43 @@ Pet Paths is a static frontend using optional Firebase Realtime Database feature
 Users must:
 - Keep credentials secure  
 - Accept responsibility for actions under their account  
-- Avoid sharing private information of others  
+- Avoid sharing other users' private data  
 
 ---
 
 ## 5. Content & Moderation
-- You retain ownership of your content  
-- You grant Pet Paths a worldwide, royalty-free licence to display it  
-- Moderators may remove content or accounts violating the Terms or AUP
+- You own the content you post  
+- You grant Pet Paths a royalty-free licence to display it  
+- Moderators may remove content or accounts violating these Terms or the AUP  
 
 ---
 
 ## 6. Prohibited Conduct
-Prohibited behaviours include:
+Prohibited behaviour includes:
 - Illegal activity  
-- Harassment, doxxing, or threats  
-- Attempting to access or alter data you do not own  
+- Harassment, doxxing, threats  
+- Attempting to access or modify data you do not own  
 - Malware distribution  
-- Automated scraping or bypassing access controls  
+- Automated scraping or bypassing protections  
 
-See the [AUP](ACCEPTABLE_USAGE_POLICY.md).
+See the [AUP](ACCEPTABLE_USAGE_POLICY.md) for full detail.
 
 ---
 
 ## 7. Third-Party Services
-Pet Paths uses Firebase. Their terms and privacy policies apply to their components.
+Pet Paths integrates with Firebase.  
+Firebase services are governed by their own terms and policies.
 
 ---
 
 ## 8. Privacy
-Data handling details appear in the [Privacy Policy](PRIVACY.md).  
-Do not include private data in public bug reports.
+Data handling is described in the [Privacy Policy](PRIVACY.md).  
+Do not submit personal data in public bug reports.
 
 ---
 
 ## 9. Disclaimers
-The Service is provided **“as is”** without warranties.
+The Service is provided **“as is”**, without warranties of any kind.
 
 ---
 
@@ -87,17 +88,18 @@ Pet Paths is not liable for indirect, incidental, or consequential damages.
 ---
 
 ## 11. Indemnity
-You agree to indemnify the maintainers against claims arising from misuse of the Service.
+You agree to indemnify the maintainers against claims arising from misuse.
 
 ---
 
 ## 12. Termination
-Pet Paths may suspend or terminate access at its discretion for violations.
+Pet Paths may suspend or terminate user access for violations of these Terms.
 
 ---
 
-## 13. Changes
-Terms may be updated. Continued use signifies acceptance.
+## 13. Updates to the Terms
+Updated versions will be posted in the repository.  
+Continued use constitutes acceptance.
 
 ---
 
@@ -107,4 +109,4 @@ Governing law is based on the maintainer’s location unless otherwise required.
 ---
 
 ## 15. Contact
-**oliverlebaigue@gmail.com**
+Email: **oliverlebaigue@gmail.com**

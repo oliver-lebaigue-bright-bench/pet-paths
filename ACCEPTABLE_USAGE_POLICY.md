@@ -1,11 +1,10 @@
-# Pet Paths — Acceptable Use Policy (AUP)
+# Pet Paths — Acceptable Use Policy
 
 [![Document](https://img.shields.io/badge/document-acceptable_use_policy-blue)](ACCEPTABLE_USAGE_POLICY.md)
-[![Security](https://img.shields.io/badge/security-reference-important)](SECURITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths)
+[![Last Commit](https://img.shields.io/github/last-commit/oliver-lebaigue-bright-bench/pet-paths)](https://github.com/oliver-lebaigue-bright-bench/pet-paths)
 
-This Acceptable Use Policy defines permitted and prohibited behaviour for users of Pet Paths.
+This Acceptable Use Policy (AUP) outlines permitted and prohibited uses of Pet Paths.
 
 Related documents:  
 [Terms of Service](TERMS_OF_SERVICE.md) •  
@@ -14,62 +13,61 @@ Related documents:
 ---
 
 ## Scope
-This AUP covers:
+This AUP applies to:
 - The Pet Paths website  
-- Firebase resources used by the frontend  
-- Any public endpoints in this repo  
+- Firebase Realtime Database used by the site  
+- Any public infrastructure in this repository  
 
 ---
 
 ## Permitted Use
 You may:
-- Share lawful pet-related posts, walks, and profiles  
-- Use the Service normally  
-- Conduct automated testing only with prior permission  
+- Share lawful walks, posts, and pet profiles  
+- Use the site within normal functionality  
+- Conduct automated testing only with written permission  
 
 ---
 
 ## Prohibited Behaviour
-The following actions are **not allowed**:
 
 ### Illegal or Harmful Activity
-- Illegal content  
-- Harassment, threats, doxxing  
-- Malicious links or malware  
+- Posting illegal content  
+- Harassment, doxxing, impersonation  
+- Sharing malicious or harmful links  
 
 ### Security Violations
-- Bypassing authentication  
-- Modifying or accessing data you do not own  
-- Circumventing moderation or rate limits  
+- Attempting to bypass authentication  
+- Unauthorized access or modification of data  
+- Circumventing rate limits or moderation  
 
 ### Platform Misuse
-- Bulk scraping  
-- Impersonation  
-- Unsolicited commercial spam  
+- Spam or unsolicited commercial content  
+- Bulk scraping or harvesting user data  
+- Reverse-engineering the client to escalate privileges  
 
 ---
 
 ## User Responsibilities
-- Protect your login credentials  
-- Avoid sharing private info of others  
+- Protect your credentials  
+- Avoid sharing private info belonging to others  
 - Report vulnerabilities responsibly  
 
 ---
 
 ## Enforcement
-Violations may result in:
+Violations may lead to:
 - Content removal  
 - Account suspension  
 - IP blocking  
-- Reporting to authorities  
+- Reporting to authorities if required  
 
 ---
 
-## Reporting
-Report misuse to **oliverlebaigue@gmail.com**  
-Include URLs, timestamps, and details.
+## Reporting Abuse
+Email: **oliverlebaigue@gmail.com**  
+Include timestamps, URLs, and reproducible details.
 
 ---
 
 ## Updates
-This policy may be updated. Major changes will be communicated.
+This policy may change. Significant updates will be posted.

@@ -1,11 +1,10 @@
 # Pet Paths — Security Policy
 
 [![Document](https://img.shields.io/badge/document-security_policy-blue)](SECURITY.md)
-[![Security](https://img.shields.io/badge/security-reporting-important)](SECURITY.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths)
+[![Last Commit](https://img.shields.io/github/last-commit/oliver-lebaigue-bright-bench/pet-paths)](https://github.com/oliver-lebaigue-bright-bench/pet-paths)
 
-This document explains how to responsibly report security vulnerabilities affecting Pet Paths.
+This document explains how to responsibly report security vulnerabilities.
 
 Related documents:  
 [Terms of Service](TERMS_OF_SERVICE.md) •  
@@ -14,44 +13,43 @@ Related documents:
 ---
 
 ## Reporting a Vulnerability
-Email reports to:  
-**oliverlebaigue@gmail.com**  
+Email: **oliverlebaigue@gmail.com**  
 Subject line: **[Pet Paths] Security Report**
 
 Include:
-- Summary of the issue  
+- A short summary  
 - Steps to reproduce  
-- Minimal proof-of-concept  
-- Affected URLs  
-- Your contact details (optional)  
+- Minimal, safe proof-of-concept  
+- Affected URLs or components  
 
 ---
 
-## Safe Handling
-- Do not access or modify data belonging to others  
-- Keep proofs-of-concept minimal and non-destructive  
-- Avoid sharing private data  
+## Safe Handling Expectations
+- Do not access or modify data that is not yours  
+- Keep testing minimal and non-destructive  
 - Do not publicly disclose before a fix  
+- Redact private information  
 
 ---
 
-## Response Timeline
-- Acknowledgment within **72 hours**  
+## Response Expectations
+- Acknowledgement within **72 hours**  
 - Triage within **14 days**  
-- Fixes coordinated with reporter  
+- Coordinated fixes for critical issues  
 
 ---
 
 ## Scope
+
 ### In-Scope
-- Pet Paths frontend  
-- Firebase database rules and behaviour  
+- Web frontend  
+- Firebase database rules and client interactions  
 - Public endpoints  
 
 ### Out-of-Scope
+- Third-party platforms (e.g., Firebase infrastructure itself)  
 - Browser vulnerabilities  
-- Third-party infrastructure  
-- Issues unrelated to repository code  
+- Personal hosting environments not controlled by this repo  
 
 ---
 
@@ -61,4 +59,4 @@ Good-faith security research will not result in legal action.
 ---
 
 ## Contact
-**oliverlebaigue@gmail.com**
+Email: **oliverlebaigue@gmail.com**
