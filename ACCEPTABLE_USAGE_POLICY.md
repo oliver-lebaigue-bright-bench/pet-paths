@@ -1,41 +1,75 @@
-# Acceptable Use Policy (AUP)
+# Pet Paths — Acceptable Use Policy (AUP)
 
-This Acceptable Use Policy (AUP) describes permitted and prohibited uses of the Pet Paths website and related services.
+[![Document](https://img.shields.io/badge/document-acceptable_use_policy-blue)](ACCEPTABLE_USAGE_POLICY.md)
+[![Security](https://img.shields.io/badge/security-reference-important)](SECURITY.md)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/oliverlebaigue/pet-paths)](https://github.com/oliverlebaigue/pet-paths)
 
-Scope
-- Applies to all visitors, registered users, contributors, and third parties interacting with content, APIs, and infrastructure referenced by this repository (frontend assets, Firebase Realtime Database references, and admin UIs).
+This Acceptable Use Policy defines permitted and prohibited behaviour for users of Pet Paths.
 
-Permitted Use
-- Sharing lawful information about pet walks, playdates, and profiles.
-- Interacting with the site in a manner consistent with local law and site functionality.
-- Reasonable automated access for indexing or testing only with prior written permission.
+Related documents:  
+[Terms of Service](TERMS_OF_SERVICE.md) •  
+[Security Policy](SECURITY.md)
 
-Prohibited Use (non-exhaustive)
-- Illegal activity or content (fraud, child sexual content, hate crimes, etc.).
-- Attempting unauthorized access, privilege escalation, data exfiltration, account takeover, or tampering with site infrastructure (including exploiting misconfigurations in Firebase or other services).
-- Bulk scraping, automated harvesting of personal data, or systematic crawling without prior authorization.
-- Posting or facilitating doxxing, threats, harassment, or invasion of privacy.
-- Distribution of malware, phishing campaigns, or links to malicious content.
-- Impersonation of other users or staff, or bypassing access controls.
-- Using the application for spam, unsolicited advertising, or commercial resale without agreement.
-- Attempts to circumvent rate limits, block lists, or administrative controls (e.g., client IP blocking).
-- Reverse-engineering or modifying client code to send privileged requests the backend does not expect.
+---
 
-User Responsibilities
-- Protect your credentials and use strong passwords.
-- Do not share others’ private information.
-- Report security issues responsibly (see SECURITY.md).
+## Scope
+This AUP covers:
+- The Pet Paths website  
+- Firebase resources used by the frontend  
+- Any public endpoints in this repo  
 
-Enforcement
-- Violations may result in content removal, suspension of accounts, blocking of IPs, and/or reporting to authorities where required.
-- Administrators may take emergency actions to protect users and infrastructure.
+---
 
-Reporting and Contact
-- To report abuses or violations: see SECURITY.md (oliverlebaigue@gmail.com).
-- Provide clear evidence (URLs, timestamps, steps to reproduce) to help triage.
+## Permitted Use
+You may:
+- Share lawful pet-related posts, walks, and profiles  
+- Use the Service normally  
+- Conduct automated testing only with prior permission  
 
-Legal & Misc
-- This AUP complements any other project terms or policies; it is not a substitute for applicable laws or contracts.
-- We reserve the right to update this policy; significant changes will be communicated via repository notices or the website.
+---
 
-Thank you for using Pet Paths responsibly.
+## Prohibited Behaviour
+The following actions are **not allowed**:
+
+### Illegal or Harmful Activity
+- Illegal content  
+- Harassment, threats, doxxing  
+- Malicious links or malware  
+
+### Security Violations
+- Bypassing authentication  
+- Modifying or accessing data you do not own  
+- Circumventing moderation or rate limits  
+
+### Platform Misuse
+- Bulk scraping  
+- Impersonation  
+- Unsolicited commercial spam  
+
+---
+
+## User Responsibilities
+- Protect your login credentials  
+- Avoid sharing private info of others  
+- Report vulnerabilities responsibly  
+
+---
+
+## Enforcement
+Violations may result in:
+- Content removal  
+- Account suspension  
+- IP blocking  
+- Reporting to authorities  
+
+---
+
+## Reporting
+Report misuse to **oliverlebaigue@gmail.com**  
+Include URLs, timestamps, and details.
+
+---
+
+## Updates
+This policy may be updated. Major changes will be communicated.
