@@ -1,2 +1,4 @@
-/node_modules/
-.maps
+.netlify
+node_modules
+.netlify
+.vercel

@@ -39,26 +39,6 @@ Important notes:
 
 ---
 
-## Repository Structure
-
-/
-├── index.html
-├── walks.html
-├── profiles.html
-├── admin.html
-├── pet-net/
-│ ├── styles.css
-│ └── script.js
-├── TERMS_OF_SERVICE.md
-├── ACCEPTABLE_USAGE_POLICY.md
-├── PRIVACY.md
-├── SECURITY.md
-├── CODE_OF_CONDUCT.md
-├── CONTRIBUTING.md
-└── LICENSE
-
----
-
 ## Policies
 
 Please review these documents before contributing or deploying:
