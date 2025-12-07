@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataBase editor</title>
+    <style>
+        :root {
+            --background: #f1f5f9;
+            --foreground: #1e293b;
+            --card: #ffffff;
+            --primary: #4f46e5;
+            --destructive: #dc2626;
+            --border: #e2e8f0;
+            --input-border: #cbd5e1;
+            --text-muted: #64748b;
+            --text-green: #15803d;
+            --text-blue: #1d4ed8;
+            --text-purple: #5b21b6;
+            --text-gray: #4b5563;
+            --dialog-overlay: rgba(0, 0, 0, 0.8);
+        }
+        body {
+            font-family: sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+            margin: 0;
+            min-height: 100vh;
+        }
+        header {
+            background-color: var(--card);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+            padding: 1.25rem 1rem;
+        }
+        main {
+            padding: 1.5rem 1rem;
+        }
+        .container {
+            max-width: 80rem;
+            margin: auto;
+        }
+        .content-wrapper {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #111827;
+            margin: 0;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .data-node {
+            margin-top: 0.5rem;
+        }
+        .data-node .data-node { /* Nested nodes */
+            margin-left: 1.5rem;
+            padding-left: 1rem;
+            border-left: 1px dashed #9ca3af;
+        }
+        .node-content {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+         .node-content:hover {
+            background-color: #f3f4f6;
+        }
+        .node-key {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .node-value {
+            margin-left: 0.5rem;
+        }
+        .node-value.string { color: var(--text-green); }
+        .node-value.number { color: var(--text-blue); }
+        .node-value.boolean { color: var(--text-purple); }
+        .node-value.null { color: var(--text-gray); }
+
+        .toggle {
+            margin-right: 0.5rem;
+            transform: rotate(0deg);
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .toggle.open {
+            transform: rotate(90deg);
+        }
+
+        .edit-input {
+            margin-left: 0.5rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+            border: 1px solid var(--input-border);
+            background-color: #e0e7ff;
+        }
+
+        /* Alert Dialog */
+        .dialog-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-color: var(--dialog-overlay);
+            display: none; /* Hidden by default */
+        }
+        .dialog-content {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 50;
+            width: 90%;
+            max-width: 32rem;
+            gap: 1rem;
+            border: 1px solid var(--border);
+            background-color: var(--card);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+            display: none; /* Hidden by default */
+        }
+        .dialog-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .dialog-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+        .dialog-description {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        .dialog-description code {
+            background-color: #e5e7eb;
+            color: var(--destructive);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+        }
+        .dialog-footer {
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 0.5rem;
+        }
+         @media (min-width: 640px) {
+            .dialog-footer {
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+        .dialog-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: background-color 0.2s;
+        }
+        .button-cancel {
+            border-color: var(--border);
+            background-color: var(--card);
+        }
+        .button-cancel:hover {
+             background-color: #f9fafb;
+        }
+        .button-delete {
+            background-color: var(--destructive);
+            color: white;
+        }
+        .button-delete:hover {
+            background-color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Firebase Realtime Database Viewer</h1>
+            <p class="subtitle">Click a value to edit. Long-press any item to delete.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <div id="data-container"><p>Loading data from Realtime Database...</p></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="delete-dialog-overlay" class="dialog-overlay"></div>
+    <div id="delete-dialog" class="dialog-content">
+        <div class="dialog-header">
+            <h2 id="dialog-title" class="dialog-title">Are you absolutely sure?</h2>
+            <div id="dialog-description" class="dialog-description">
+                This action cannot be undone. This will permanently delete the data at path: <br />
+                <code id="delete-path"></code>
+            </div>
+        </div>
+        <div class="dialog-footer">
+            <button id="cancel-delete-btn" class="dialog-button button-cancel">Cancel</button>
+            <button id="confirm-delete-btn" class="dialog-button button-delete">Delete</button>
+        </div>
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCMuOymY5KniYJgg51vkhcYWxXeyXAyFk0",
+            authDomain: "pet-paths.firebaseapp.com",
+            databaseURL: "https://pet-paths-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "pet-paths",
+            storageBucket: "pet-paths.appspot.com",
+            messagingSenderId: "5202022310",
+            appId: "1:5202022310:web:55991fbd2be58294bfc967",
+            measurementId: "G-SW8L37HRVV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const dataContainer = document.getElementById('data-container');
+        
+        let deleteCandidate = null;
+        let longPressTimer;
+
+        // --- Dialog Logic ---
+        const dialogOverlay = document.getElementById('delete-dialog-overlay');
+        const dialog = document.getElementById('delete-dialog');
+        const deletePathEl = document.getElementById('delete-path');
+        const cancelBtn = document.getElementById('cancel-delete-btn');
+        const confirmBtn = document.getElementById('confirm-delete-btn');
+
+        function showDeleteDialog(path) {
+            deleteCandidate = path;
+            deletePathEl.textContent = path || '/';
+            dialogOverlay.style.display = 'block';
+            dialog.style.display = 'grid';
+        }
+
+        function closeDeleteDialog() {
+            deleteCandidate = null;
+            dialogOverlay.style.display = 'none';
+            dialog.style.display = 'none';
+        }
+
+        cancelBtn.addEventListener('click', closeDeleteDialog);
+        confirmBtn.addEventListener('click', () => {
+            if (deleteCandidate === null || !db) return;
+            remove(ref(db, deleteCandidate))
+                .catch(e => console.error("Deletion failed:", e));
+            closeDeleteDialog();
+        });
+
+
+        function getDataType(value) {
+            if (value === null) return 'null';
+            if (Array.isArray(value)) return 'array';
+            if (typeof value === 'object') return 'object';
+            return typeof value;
+        }
+
+        function createDataNode(key, value, path, isRoot = false) {
+            const node = document.createElement('div');
+            node.className = 'data-node';
+
+            const content = document.createElement('div');
+            content.className = 'node-content';
+            
+            const type = getDataType(value);
+            const isObjectNode = type === 'object' || type === 'array';
+            
+            // Key
+            const keySpan = document.createElement('span');
+            keySpan.className = 'node-key';
+            keySpan.textContent = `${key}:`;
+
+            // Toggle arrow for objects/arrays
+            if (isObjectNode) {
+                const toggle = document.createElement('span');
+                toggle.className = 'toggle';
+                toggle.innerHTML = '&#9656;';
+                if(isRoot){
+                    toggle.classList.add('open');
+                }
+                content.appendChild(toggle);
+            }
+            
+            content.appendChild(keySpan);
+
+            // Value or children container
+            let valueSpan;
+            if (!isObjectNode) {
+                valueSpan = document.createElement('span');
+                valueSpan.className = `node-value ${type}`;
+                valueSpan.textContent = value === null ? 'null' : (type === 'string' ? `"${value}"` : String(value));
+                content.appendChild(valueSpan);
+            }
+
+            node.appendChild(content);
+
+            let childrenContainer;
+            if (isObjectNode) {
+                childrenContainer = document.createElement('div');
+                if(!isRoot){
+                    childrenContainer.style.display = 'none';
+                }
+                Object.entries(value).forEach(([childKey, childValue]) => {
+                    childrenContainer.appendChild(createDataNode(childKey, childValue, `${path}/${childKey}`));
+                });
+                node.appendChild(childrenContainer);
+            }
+
+            // --- Event Listeners ---
+            
+            function handleEdit() {
+                if (isObjectNode) return;
+
+                const originalValue = value;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'edit-input';
+                input.value = String(originalValue ?? '');
+                
+                content.replaceChild(input, valueSpan);
+                input.focus();
+                input.select();
+
+                const save = () => {
+                    let newValue = input.value;
+                    // Type coercion
+                    if (type === 'number') newValue = Number(newValue);
+                    if (type === 'boolean') newValue = (input.value.toLowerCase() === 'true');
+                    if (type === 'null' && input.value === 'null') newValue = null;
+
+                    set(ref(db, path), newValue)
+                      .catch(e => console.error("Edit failed:", e))
+                      .finally(() => {
+                           // The onValue listener will redraw, so we don't need to manually revert the DOM
+                      });
+                };
+                
+                input.addEventListener('blur', save);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') input.blur();
+                    if (e.key === 'Escape') {
+                         content.replaceChild(valueSpan, input); // Revert
+                    }
+                });
+            }
+
+            const startLongPress = (e) => {
+                e.preventDefault();
+                longPressTimer = setTimeout(() => {
+                    if (!isRoot) {
+                        showDeleteDialog(path);
+                    }
+                }, 500);
+            };
+
+            const cancelLongPress = (e, shouldClick = true) => {
+                clearTimeout(longPressTimer);
+                 if (shouldClick && e.target.tagName !== 'INPUT') {
+                     if(isObjectNode) {
+                        childrenContainer.style.display = childrenContainer.style.display === 'none' ? 'block' : 'none';
+                        content.querySelector('.toggle')?.classList.toggle('open');
+                     } else {
+                        handleEdit();
+                     }
+                 }
+            };
+            
+            content.addEventListener('mousedown', startLongPress);
+            content.addEventListener('touchstart', startLongPress);
+            content.addEventListener('mouseup', cancelLongPress);
+            content.addEventListener('touchend', cancelLongPress);
+            content.addEventListener('mouseleave', () => clearTimeout(longPressTimer));
+
+
+            return node;
+        }
+
+        function renderData(data) {
+            dataContainer.innerHTML = '';
+            if (data) {
+                const rootNode = createDataNode('Database Root', data, '', true);
+                dataContainer.appendChild(rootNode);
+            } else {
+                dataContainer.textContent = 'No data available at the root of the database.';
+            }
+        }
+
+        const rootRef = ref(db, '/');
+        onValue(rootRef, (snapshot) => {
+            if (snapshot.exists()) {
+                renderData(snapshot.val());
+            } else {
+                renderData(null);
+            }
+        }, (error) => {
+            console.error('Firebase RTDB Error:', error);
+            dataContainer.innerHTML = `<p style="color: red;">Error fetching data from Realtime Database: ${error.message}</p>`;
+        });
+
+    </script>
+</body>
+</html>

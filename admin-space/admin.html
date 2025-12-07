@@ -52,6 +52,48 @@
       --border: #495057; 
       --muted: #adb5bd; 
     }
+    [data-theme="forest"] { 
+      --primary: #388e3c; 
+      --primary-dark: #256029; 
+      --primary-light: #4caf50; 
+      --bg: #e8f5e9; 
+      --text: #1b3a1b; 
+      --btn-text: #fff; 
+      --header-bg: linear-gradient(135deg, #388e3c, #4caf50); 
+      --header-text: #fff; 
+      --card-bg: #ffffff; 
+      --card-shadow: 0 4px 20px rgba(56, 142, 60, 0.1); 
+      --border: #c8e6c9; 
+      --muted: #6c757d; 
+    }
+    [data-theme="ocean"] { 
+      --primary: #1976d2; 
+      --primary-dark: #0d47a1; 
+      --primary-light: #42a5f5; 
+      --bg: #e3f2fd; 
+      --text: #0d223a; 
+      --btn-text: #fff; 
+      --header-bg: linear-gradient(135deg, #1976d2, #42a5f5); 
+      --header-text: #fff; 
+      --card-bg: #ffffff; 
+      --card-shadow: 0 4px 20px rgba(25, 118, 210, 0.1); 
+      --border: #bbdefb; 
+      --muted: #6c757d; 
+    }
+    [data-theme="rose"] { 
+      --primary: #e91e63; 
+      --primary-dark: #ad1457; 
+      --primary-light: #f06292; 
+      --bg: #fce4ec; 
+      --text: #3a1b2f; 
+      --btn-text: #fff; 
+      --header-bg: linear-gradient(135deg, #e91e63, #f06292); 
+      --header-text: #fff; 
+      --card-bg: #ffffff; 
+      --card-shadow: 0 4px 20px rgba(233, 30, 99, 0.1); 
+      --border: #f8bbd9; 
+      --muted: #6c757d; 
+    }
     body { 
       margin: 0; 
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
@@ -76,7 +118,8 @@
       font-size: 1.3rem; 
       font-weight: 700; 
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
-      position: relative; 
+      position: relative;
+      z-index: 1001 
     }
     .header::after { 
       content: ''; 
@@ -136,6 +179,9 @@
       align-items: center; 
       flex-wrap: wrap; 
     }
+    .spaced-card-row {
+      gap: 32px; /* Increased from 16px for more space between accounts and logs */
+    }
     .admin-btn { 
       background: var(--primary); 
       color: var(--btn-text); 
@@ -160,13 +206,13 @@
       transform: translateY(0); 
     }
     .admin-btn.secondary { 
-      background: #f8f9fa; 
+      background: var(--card-bg); 
       color: var(--text); 
       border: 1px solid var(--border); 
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
     }
     .admin-btn.secondary:hover { 
-      background: #e9ecef; 
+      background: var(--border); 
     }
     .admin-btn.warn { 
       background: var(--danger); 
@@ -210,7 +256,7 @@
       border-radius: 8px; 
     }
     .list .row:hover { 
-      background: rgba(74, 79, 207, 0.05); 
+      background: rgba(var(--primary-rgb), 0.05); 
     }
     .list .row:last-child { 
       border-bottom: none; 
@@ -250,7 +296,7 @@
     }
     .footer a { 
       text-decoration: none; 
-      color: black; 
+      color: var(--btn-text); 
       font-size: 24px; 
       flex: 1; 
       display: flex; 
@@ -284,6 +330,8 @@
       max-height: 85vh; 
       overflow: auto; 
       box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25); 
+      color: var(--text); 
+      border: 1px solid var(--border); 
     }
     input[type="text"], textarea, select { 
       width: 100%; 
@@ -550,10 +598,14 @@
       margin-top: 8px !important;
     }
     .sidebar {
-      flex: 0 0 200px !important;
-      min-width: 160px !important;
-      padding: 10px !important;
-      margin-left: 0 !important;
+      position: fixed !important;
+      top: 0; /* Full height from top */
+      left: 0;
+      height: 100vh; /* Full viewport height */
+      z-index: 1000;
+      transform: translateX(-100%); /* Hidden by default */
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      background: var(--card-bg); border-right: 1px solid var(--border);
     }
     .header {
       padding-left: 8px !important;
@@ -576,6 +628,45 @@
     @media (max-width: 920px) {
       .layout { margin: 6px !important; padding: 0 6px !important; }
       .sidebar { width: 100% !important; min-width: 0 !important; position: relative !important; height: auto !important; }
+    }
+    .hamburger-btn {
+      background: none;
+      border: none;
+      color: var(--header-text);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+    .hamburger-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .sidebar {
+      transition: transform 0.3s ease;
+    }
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+    @media (max-width: 920px) {
+      .hamburger-btn {
+        display: block !important; /* Show hamburger on mobile */
+      }
+      .sidebar {
+        position: fixed !important;
+        top: 64px; /* Below header */
+        left: 0;
+        height: calc(100vh - 64px);
+        z-index: 1000;
+        transform: translateX(-100%); /* Hidden by default */
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+      }
+      .sidebar:not(.hidden) {
+        transform: translateX(0); /* Slide in when open */
+      }
+      .main {
+        margin-left: 0 !important; /* No margin on mobile */
+      }
     }
 </style>
 </head>
@@ -603,6 +694,7 @@
 
   <!-- NEW: Compact header -->
   <div class="header" style="display:flex;align-items:center;gap:12px;">
+    <button id="sidebarToggle" class="hamburger-btn" aria-label="Toggle sidebar" style="display:none;"><i class="fa-solid fa-bars"></i></button>
     <div style="display:flex;align-items:center;gap:12px;">
       <img src="/assets/logo.png" alt="Pet Paths" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">
       <div>
@@ -618,7 +710,7 @@
 
   <!-- NEW: Sidebar + Main layout -->
   <div class="layout">
-    <aside class="sidebar" aria-label="Admin navigation">
+    <aside class="sidebar hidden" aria-label="Admin navigation">
       <div class="brand">
         <div style="font-weight:800;font-size:1.05rem;color:var(--primary-dark);">Controls</div>
       </div>
@@ -630,6 +722,7 @@
         <a href="#notifications"><i class="fa-solid fa-bell"></i> Notifications</a>
         <a href="#logs"><i class="fa-solid fa-clipboard-list"></i> Logs</a>
         <a href="#settings"><i class="fa-solid fa-gear"></i> Settings</a>
+        <a href="database.html"><i class="fa-solid fa-database"></i> Database</a>
       </div>
 
       <hr style="margin:12px 0;border-color:var(--border);" />
@@ -725,7 +818,7 @@
 
           <!-- Accounts Manager & Activity Logs -->
           <div class="admin-card">
-            <div class="card-row" style="width:100%;align-items:flex-start;">
+            <div class="card-row spaced-card-row" style="width:100%;align-items:flex-start;">
               <div style="flex:1;min-width:320px;">
                 <h3 style="margin:0;color:#3a6ea5;"><i class="fa-solid fa-users"></i> Manage Accounts</h3>
                 <p class="small muted">View and delete user accounts stored at <code>/accounts</code>.</p>
@@ -798,13 +891,13 @@
   </div>
 
   <div class="footer">
-    <a href="/settings.html"><i class="fa-solid fa-gear"></i></a>
-    <a href="/playdates.html"><i class="fa-solid fa-calendar"></i></a>
-    <a href="/walks.html"><i class="fa-solid fa-dog"></i></a>
-    <a href="/index.html"><i class="fa-solid fa-house"></i></a>
-    <a href="/pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
-    <a href="/profiles.html"><i class="fa-solid fa-user"></i></a>
-    <a href="/feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
+    <a href="../settings.html"><i class="fa-solid fa-gear"></i></a>
+    <a href="../playdates.html"><i class="fa-solid fa-calendar"></i></a>
+    <a href="../walks.html"><i class="fa-solid fa-dog"></i></a>
+    <a href="../index.html"><i class="fa-solid fa-house"></i></a>
+    <a href="../pet-net/index.html"><i class="fa-solid fa-globe"></i></a>
+    <a href="../profiles.html"><i class="fa-solid fa-user"></i></a>
+    <a href="../feedback.html"><i class="fa-solid fa-clipboard-list"></i></a>
     <a href="/admin.html" id="adminLink" class="active" style="display:flex;"><i class="fa-solid fa-user-shield"></i></a>
   </div>
 
@@ -1303,6 +1396,22 @@
             }
           }
           setTimeout(() => statusEl.textContent = '', 5000);
+        });
+      }
+
+
+      // Sidebar toggle for mobile
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('hidden');
+        });
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+          if (window.innerWidth <= 920 && !sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.add('hidden');
+          }
         });
       }
     </script>
