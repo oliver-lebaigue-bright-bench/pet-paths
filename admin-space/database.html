@@ -187,9 +187,72 @@
         .button-delete:hover {
             background-color: #b91c1c;
         }
+        /* AUTH overlay should fully cover the page to prevent scrolling to underlying content */
+        #passwordForm.auth-screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        box-sizing: border-box;
+        background: rgba(0,0,0,0.35);
+        z-index: 11000;
+        }
+        #passwordForm .auth-card {
+        z-index: 11001;
+        }
+        /* Centered auth screen that occupies the initial view */
+        #passwordForm.auth-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 84px); /* header + footer spacing */
+        padding: 24px;
+        box-sizing: border-box;
+        }
+        #passwordForm .auth-card {
+        width: 100%;
+        max-width: 640px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 28px;
+        box-shadow: var(--card-shadow);
+        }
+        /* When auth is active, lock the page: no scroll, no pointer events on background */
+        body.locked {
+        overflow: hidden;
+        height: 100%;
+        }
+        body.locked main,
+        body.locked header {
+        pointer-events: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: none;
+        filter: blur(2px) brightness(0.95);
+        transition: filter 200ms ease;
+        }
+        /* make sure the auth overlay remains interactive */
+        #passwordForm.auth-screen {
+        pointer-events: auto;
+        }
     </style>
 </head>
 <body>
+    <!-- Password protection screen -->
+    <div id="passwordForm" class="auth-screen" aria-live="polite" role="dialog" aria-modal="true" aria-hidden="false">
+        <div class="auth-card">
+            <h2 style="margin:0 0 8px;color:#3a6ea5;"><i class="fa-solid fa-lock"></i> Access Required</h2>
+            <p style="margin:0 0 12px;">Enter the password to access the database editor.</p>
+            <form id="passwordCheckForm" style="display:flex;gap:12px;align-items:center;">
+            <input type="password" id="adminPassword" placeholder="Enter password" required style="flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);" />
+            <button type="submit" class="admin-btn" style="min-width:130px;"><i class="fa-solid fa-sign-in-alt"></i> Login</button>
+            </form>
+            <div id="errorMsg" style="color:#d32f2f;display:none;margin-top:10px;">Incorrect password. Please try again.</div>
+        </div>
+    </div>
 
     <header>
         <div class="container">
@@ -198,7 +261,7 @@
         </div>
     </header>
 
-    <main>
+    <main style="display: none;">
         <div class="container">
             <div class="content-wrapper">
                 <div id="data-container"><p>Loading data from Realtime Database...</p></div>
@@ -223,6 +286,32 @@
 
 
     <script type="module">
+        // Password protection elements
+        const passwordForm = document.getElementById("passwordCheckForm");
+        const passwordInput = document.getElementById("adminPassword");
+        const errorMsg = document.getElementById("errorMsg");
+        const passwordSection = document.getElementById("passwordForm");
+        const mainContent = document.querySelector("main");
+
+        const correctPassword = "Onniecat123!";
+
+        passwordForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (passwordInput.value === correctPassword) {
+            passwordSection.style.display = "none";
+            mainContent.style.display = "block";
+            document.body.classList.remove('locked');
+            mainContent.setAttribute('aria-hidden', 'false');
+            passwordSection.setAttribute('aria-hidden', 'true');
+            passwordInput.value = "";
+        } else {
+            errorMsg.style.display = "block";
+            passwordInput.value = "";
+            passwordInput.focus();
+        }
+        });
+
+        window.addEventListener("load", () => passwordInput.focus());
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
