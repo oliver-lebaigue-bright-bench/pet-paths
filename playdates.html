@@ -53,19 +53,10 @@
       --header-bg: #d81b60;
       --header-text: #fff;
     }
-    [data-theme="dark"] {
-      --primary: #222b45;
-      --primary-dark: #151a30;
-      --bg: #181a20;
-      --text: #f3f3f3;
-      --btn-text: #fff;
-      --header-bg: #222b45;
-      --header-text: #fff;
-    }
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      background: var(--bg);
+      font-family: 'Playwrite US Modern', cursive;
+      background-color: var(--bg);
       color: var(--text);
       display: flex;
       flex-direction: column;
@@ -79,18 +70,46 @@
       font-size: 1.2rem; font-weight: bold;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       transition: background 0.3s, color 0.3s;
+      font-family: 'Playwrite US Modern', cursive;
     }
     .header .icons { display: flex; gap: 15px; font-size: 1.4rem; cursor: pointer; }
 
-    .content { flex: 1; padding: 15px; }
+    .content { flex: 1; padding: 15px; animation: fadeInUp 1.5s ease-out; }
     .status-card {
-      background: var(--card-bg, #23243a);
+      background: var(--card-bg, #fff);
       color: var(--card-text, var(--text));
       border-radius: 16px;
-      box-shadow: 0 2px 10px rgba(60,60,60,0.08);
-      border: 1.5px solid #e0e0de;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border: 2px solid var(--primary);
       margin-bottom: 18px; padding: 18px 20px 14px 20px;
       transition: background 0.3s, color 0.3s;
+      position: relative;
+    }
+    .status-card::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--primary);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      opacity: 0.5;
+      animation: wiggle 2s infinite ease-in-out;
+      transform: rotate(45deg);
+    }
+    .status-card::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--primary);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      opacity: 0.5;
+      animation: wiggle 2s infinite ease-in-out reverse;
+      transform: rotate(-45deg);
     }
     .status-card-header {
       display: flex; justify-content: space-between;
@@ -99,6 +118,7 @@
     .status-type {
       font-size: 1.1em; font-weight: 600;
       display: flex; align-items: center; gap: 0.5em;
+      font-family: 'Playwrite US Modern', cursive;
     }
     .status-type.walking { color: #4CAF50; }
     .status-type.not-walking { color: #F44336; }
@@ -110,7 +130,7 @@
     }
     .status-details-row { display: flex; flex-wrap: wrap; gap: 1em; font-size: 0.95em; margin: 10px 0; }
     .status-notes {
-      background: var(--note-bg, #2a2b3d);
+      background: var(--note-bg, #f8f8fa);
       border-left: 3px solid var(--primary);
       border-radius: 7px; padding: 7px 12px; margin-top: 8px; font-size: 0.95em;
       color: var(--text);
@@ -125,7 +145,7 @@
       position: relative;
     }
 
-    #loadingSpinner, #emptyState { text-align: center; padding: 20px; font-size: 1rem; color: #555; }
+    #loadingSpinner, #emptyState { text-align: center; padding: 20px; font-size: 1rem; color: var(--text); animation: bounceIn 1s ease-out; }
 
     /* Footer */
     .footer {
@@ -133,12 +153,15 @@
       padding: 14px 0 10px; position: fixed; bottom: 0; width: 100%;
       z-index: 1002;
       transition: background 0.3s;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 8px rgba(0,0,0,0.2);
     }
     .footer a { text-decoration: none; color: black; font-size: 24px; flex: 1;
       display: flex; align-items: center; justify-content: center; position: relative; }
     .footer a.active::before {
       content: ""; width: 50px; height: 50px; background: var(--primary); border-radius: 50%;
       position: absolute; top: -25px; left: 50%; transform: translateX(-50%); z-index: 1;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
     .footer a.active i { font-size: 30px; transform: translateY(-5px); z-index: 2; }
 
@@ -153,17 +176,18 @@
     .modal-content {
       max-width: 700px;
       width: 98vw;
-      background: var(--card-bg, #23243a);
+      background: var(--card-bg, #fff);
       color: var(--card-text, var(--text));
       max-height: 80vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       border-radius: 18px;
-      box-shadow: 0 4px 32px rgba(60,60,60,0.18);
+      box-shadow: 0 4px 32px rgba(0,0,0,0.2);
       padding: 28px 6vw 22px 6vw;
       gap: 1.2em;
       transition: background 0.3s, color 0.3s;
+      border: 2px solid var(--primary);
     }
     .modal-form-section {
       margin-bottom: 22px;
@@ -206,6 +230,8 @@
       text-align: center;
       margin-bottom: 15px;
       color: var(--primary);
+      font-family: 'Playwrite US Modern', cursive;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
     /* Card background for theme */
     :root {
@@ -219,22 +245,27 @@
       --note-bg: #2a2b3d;
     }
     .modal-content button {
-      background: #4a4fcf; color: #fff; border: none;
-      padding: 10px 16px; border-radius: 8px;
+      background: var(--primary); color: var(--btn-text); border: none;
+      padding: 12px 20px; border-radius: 25px;
       cursor: pointer; font-size: 1rem;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-family: 'Playwrite US Modern', cursive;
     }
+    .modal-content button:hover { background: var(--primary-dark); transform: scale(1.05) rotate(1deg); }
     .modal-content label { 
       display: block; margin: 10px 0; font-weight: 500; 
+      font-family: 'Playwrite US Modern', cursive;
     }
     .modal-content input, .modal-content select, .modal-content textarea {
       width: 100%; padding: 8px 10px; margin-top: 4px; border-radius: 8px;
       border: 1px solid #ccc; font-size: 0.95rem;
+      font-family: 'Playwrite US Modern', cursive;
     }
     .modal-content textarea { resize: vertical; min-height: 60px; }
-    .modal-content button:hover { background: #3a3fb0; }
     #map {
-      height: 200px;          /* fixed max height */
-      max-height: 40vh;       /* never taller than 40% of viewport */
+      height: 200px;
+      max-height: 40vh;
       margin: 10px 0;
       border-radius: 8px;
       z-index: 10;
@@ -242,7 +273,41 @@
     }
 
     /* Filter modal */
-    .filter-options label { display: block; margin: 10px 0; }
+    .filter-options label { display: block; margin: 10px 0; font-family: 'Playwrite US Modern', cursive; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      70% {
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      75% { transform: rotate(-5deg); }
+    }
   </style>
 </head>
 <body>
