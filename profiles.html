@@ -786,7 +786,9 @@
 			div.className = "profile-card";
 
 			let avatarHtml;
-			if (data.photoURL) {
+			if (data.username === "admin") {
+				avatarHtml = `<div class="profile-avatar"><img src="favicon.ico" alt="Avatar"/></div>`;
+			} else if (data.photoURL) {
 				avatarHtml = `<div class="profile-avatar"><img src="${data.photoURL}" alt="Avatar"/></div>`;
 			} else {
 				avatarHtml = `<div class="profile-avatar"><i class="fa-solid fa-user"></i></div>`;
@@ -836,12 +838,12 @@
 				});
 			}
 
-			// Render pet gallery
+			// Render pet gallery (exclude admin user)
 			const petGallery = document.getElementById("petGallery");
 			petGallery.innerHTML = "";
 			keys.forEach(key => {
 				const prof = allProfiles[key];
-				if (prof.photoURL) {
+				if (prof.photoURL && prof.username !== "admin") {
 					const img = document.createElement("img");
 					img.src = prof.photoURL;
 					img.alt = prof.petName || "Pet Photo";

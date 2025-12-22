@@ -186,17 +186,44 @@
       transform: rotate(-45deg);
     }
     .status-card {
-      background: #fff;
+      background: var(--card-bg, #fff);
+      color: var(--card-text, var(--text));
       border-radius: 16px;
-      box-shadow: 0 3px 12px rgba(60, 60, 60, 0.08);
-      border: 1.5px solid #e0e0de;
-      margin-bottom: 18px;
-      padding: 18px 20px 14px 20px;
-      transition: box-shadow 0.2s ease-in-out;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 2px solid var(--primary);
+      margin-bottom: 18px; padding: 18px 20px 14px 20px;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
       animation: bounceIn 1s ease-out;
     }
+    .status-card::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--primary);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      opacity: 0.5;
+      animation: wiggle 2s infinite ease-in-out;
+      transform: rotate(45deg);
+    }
+    .status-card::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--primary);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      opacity: 0.5;
+      animation: wiggle 2s infinite ease-in-out reverse;
+      transform: rotate(-45deg);
+    }
     .status-card:hover {
-      box-shadow: 0 8px 25px rgba(60, 60, 60, 0.12);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
     }
     .status-card-header {
       display: flex;
@@ -238,14 +265,14 @@
       margin: 10px 0;
     }
     .status-notes {
-      background: #f8f8fa;
-      border-left: 4px solid var(--primary);
-      border-radius: 8px;
-      padding: 10px 16px;
-      margin-top: 10px;
+      background: var(--note-bg, #f8f8fa);
+      border-left: 3px solid var(--primary);
+      border-radius: 7px;
+      padding: 7px 12px;
+      margin-top: 8px;
       font-size: 0.95em;
-      color: #444;
-      font-style: italic;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
     }
     .status-mini-map {
       height: 120px;
@@ -260,8 +287,9 @@
       text-align: center;
       padding: 24px;
       font-size: 1.1rem;
-      color: #777;
+      color: var(--text);
       font-family: 'Playwrite US Modern', cursive;
+      animation: bounceIn 1s ease-out;
     }
     .btn {
       display: block;
@@ -355,34 +383,39 @@
     .modal-content {
       max-width: 500px;
       width: 90vw;
-      background: white;
+      background: var(--card-bg, #fff);
+      color: var(--card-text, var(--text));
       max-height: 85vh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       border-radius: 20px;
-      box-shadow: 0 8px 28px rgba(60, 60, 60, 0.25);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.2);
       padding: 28px 30px 22px 30px;
       gap: 1.5em;
       position: relative;
       box-sizing: border-box;
       animation: bounceIn 1s ease-out;
+      border: 2px solid var(--primary);
+      transition: background 0.3s, color 0.3s;
     }
     .modal-content h3 {
       margin: 0 0 20px;
-      color: #3a6ea5;
+      color: var(--primary);
       text-align: center;
       font-weight: 700;
       font-size: 1.5rem;
       user-select: none;
       font-family: 'Playwrite US Modern', cursive;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
     .modal-content label {
       display: block;
       font-weight: 600;
       margin-bottom: 6px;
-      color: #222;
+      color: var(--text);
       font-size: 1rem;
+      font-family: 'Playwrite US Modern', cursive;
     }
     .modal-content input[type="text"],
     .modal-content input[type="password"],
@@ -395,46 +428,49 @@
       font-size: 1rem;
       transition: border-color 0.2s ease;
       outline-offset: 2px;
+      font-family: 'Playwrite US Modern', cursive;
     }
     .modal-content input[type="text"]:focus,
     .modal-content input[type="password"]:focus,
     .modal-content select:focus,
     .modal-content textarea:focus {
-      border-color: #4a4fcf;
+      border-color: var(--primary);
       outline: none;
     }
     .modal-content button {
       margin-top: 14px;
-      background: #4a4fcf;
-      color: white;
+      background: var(--primary);
+      color: var(--btn-text);
       border: none;
       border-radius: 12px;
       font-size: 1.1rem;
       padding: 12px 0;
       cursor: pointer;
-      transition: background-color 0.25s ease;
+      transition: background-color 0.25s ease, transform 0.2s;
       font-weight: 700;
       user-select: none;
       font-family: 'Playwrite US Modern', cursive;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     .modal-content button:hover {
-      background: #3a3ecf;
+      background: var(--primary-dark);
+      transform: scale(1.05) rotate(1deg);
     }
     .modal-content p {
       text-align: center;
       font-size: 0.9rem;
-      color: #666;
+      color: var(--text);
       user-select: none;
     }
     .modal-content p a {
-      color: #4a4fcf;
+      color: var(--primary);
       text-decoration: none;
       font-weight: 600;
       cursor: pointer;
       transition: color 0.2s ease;
     }
     .modal-content p a:hover {
-      color: #3a3ecf;
+      color: var(--primary-dark);
     }
     .close {
       position: absolute;
@@ -447,7 +483,7 @@
       transition: color 0.25s ease;
     }
     .close:hover {
-      color: #4a4fcf;
+      color: var(--primary);
     }
     .modal-form-section {
       margin-bottom: 22px;
@@ -505,59 +541,20 @@
       z-index: 10;
       position: relative;
     }
-    /* Card background for theme */
-    :root {
-      --card-bg: #fff;
-      --card-text: #222;
-      --note-bg: #f8f8fa;
-    }
-    [data-theme="dark"] {
-      --card-bg: #23243a;
-      --card-text: #f3f3f3;
-      --note-bg: #2a2b3d;
-    }
+
+    /* Filter modal */
     .filter-options label {
       display: block;
       margin: 10px 0;
+      font-family: 'Playwrite US Modern', cursive;
     }
+
     /* New animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @keyframes bounceIn {
-      0% {
-        opacity: 0;
-        transform: scale(0.3);
-      }
-      50% {
-        opacity: 1;
-        transform: scale(1.05);
-      }
-      70% {
-        transform: scale(0.9);
-      }
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    @keyframes wiggle {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(5deg); }
-      75% { transform: rotate(-5deg); }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-  </style>
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.3); } 50% { opacity: 1; transform: scale(1.05); } 70% { transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(5deg); } 75% { transform: rotate(-5deg); } }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+    </style>
 </head>
 <body>
   <script>
