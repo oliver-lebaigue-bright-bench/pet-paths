@@ -775,29 +775,58 @@
 		let allProfiles = {};
 		let currentUser = null; // will store { username, key, ...profileData }
 
-		// Create a profile card
-		function createProfileCard(data, key) {
+		// Lightbox container (add once in your HTML body)
+		const lightbox = document.createElement("div");
+		lightbox.id = "lightbox";
+		lightbox.style.cssText = `
+			position: fixed;
+			top: 0; left: 0; right:0; bottom:0;
+			background: rgba(0,0,0,0.8);
+			display: none;
+			justify-content: center;
+			align-items: center;
+			z-index: 10000;
+		`;
+		const lightboxImg = document.createElement("img");
+		lightboxImg.style.cssText = `
+			max-width: 90%;
+			max-height: 90%;
+			border-radius: 16px;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+		`;
+		lightbox.appendChild(lightboxImg);
+		document.body.appendChild(lightbox);
+
+		// Close lightbox on click
+		lightbox.addEventListener("click", () => {
+			lightbox.style.display = "none";
+		});
+
+		// Function to create a single profile card element
+		function createProfileCard(data) {
 			const div = document.createElement("div");
 			div.className = "profile-card";
 
+			// Avatar
 			let avatarHtml;
 			if (data.username === "admin") {
-				avatarHtml = `<div class="profile-avatar"><img src="favicon.ico" alt="Avatar"/></div>`;
+				avatarHtml = `<div class="profile-avatar"><img src="favicon.ico" alt="Avatar" loading="lazy"/></div>`;
 			} else if (data.photoURL) {
-				avatarHtml = `<div class="profile-avatar"><img src="${data.photoURL}" alt="Avatar"/></div>`;
+				avatarHtml = `<div class="profile-avatar"><img src="${data.photoURL}" alt="Avatar" loading="lazy"/></div>`;
 			} else {
 				avatarHtml = `<div class="profile-avatar"><i class="fa-solid fa-user"></i></div>`;
 			}
 
-			// Badge for first 100 members
+			// Badge for top 100
 			let badgeHtml = "";
 			if (data.joinOrder && data.joinOrder <= 100) {
 				badgeHtml = `<span style="background:#ffd700;color:#3a6ea5;padding:2px 10px;border-radius:8px;font-size:0.9em;margin-left:8px;vertical-align:middle;">Top 100</span>`;
 			}
 
-			// Send Message button (not functional, placeholder)
-			let messageBtn = `<button class="sendMsgBtn" data-username="${data.username}" style="margin-top:10px;background:#4a4fcf;color:white;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:0.98em;">Send Message</button>`;
+			// Message button
+			const messageBtn = `<button class="sendMsgBtn" data-username="${data.username}" style="margin-top:10px;background:#4a4fcf;color:white;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:0.98em;">Send Message</button>`;
 
+			// Main profile info
 			div.innerHTML = `
 				${avatarHtml}
 				<div class="profile-info">
@@ -810,30 +839,52 @@
 					${messageBtn}
 				</div>
 			`;
+
+			// Render posts if any
+			if (data.posts && data.posts.length > 0) {
+				const postsContainer = document.createElement("div");
+				postsContainer.className = "user-posts";
+				data.posts.forEach(post => {
+					if (post.postImageURL) {
+						const postImg = document.createElement("img");
+						postImg.src = post.postImageURL;
+						postImg.alt = post.title || "Post Image";
+						postImg.loading = "lazy";
+						postImg.style.width = "100%";
+						postImg.style.maxHeight = "300px";
+						postImg.style.objectFit = "cover";
+						postImg.style.borderRadius = "12px";
+						postImg.style.marginTop = "10px";
+						postsContainer.appendChild(postImg);
+					}
+				});
+				div.appendChild(postsContainer);
+			}
+
 			return div;
 		}
 
+		// Function to render all profiles
 		function renderProfiles() {
 			profileListEl.innerHTML = "";
 			const keys = Object.keys(allProfiles);
 
-			// Filter out current user profile from list
-			const filteredKeys = keys.filter(k => {
-				if (!currentUser) return true;
-				return allProfiles[k].username !== currentUser.username;
-			});
+			// Filter out current user
+			const filteredKeys = keys.filter(k => !currentUser || allProfiles[k].username !== currentUser.username);
 
 			if (filteredKeys.length === 0) {
 				emptyStateEl.style.display = "block";
 			} else {
 				emptyStateEl.style.display = "none";
+
 				filteredKeys.forEach(key => {
-					const card = createProfileCard(allProfiles[key], key);
-					profileListEl.appendChild(card);
+					const data = allProfiles[key];
+					const profileCard = createProfileCard(data);
+					profileListEl.appendChild(profileCard);
 				});
 			}
 
-			// Render pet gallery (exclude admin user)
+			// Render pet gallery (exclude admin)
 			const petGallery = document.getElementById("petGallery");
 			petGallery.innerHTML = "";
 			keys.forEach(key => {
@@ -843,6 +894,7 @@
 					img.src = prof.photoURL;
 					img.alt = prof.petName || "Pet Photo";
 					img.title = (prof.displayName || prof.username || "User") + (prof.petName ? `'s pet: ${prof.petName}` : "");
+					img.loading = "lazy";
 					img.style.width = "90px";
 					img.style.height = "90px";
 					img.style.objectFit = "cover";
@@ -852,6 +904,7 @@
 				}
 			});
 		}
+
 
 		function loadProfiles() {
 			loadingSpinner.style.display = "block";
