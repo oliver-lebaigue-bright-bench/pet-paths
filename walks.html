@@ -558,13 +558,6 @@
 </head>
 <body>
   <script>
-    // Redirect unverified users to the verification page
-    if (!localStorage.getItem("petpaths_verified")) {
-      window.location.href = "verify";
-    }
-    // removed ipify client telemetry to avoid writing visitor IPs to Firebase/middleware
-  </script>
-  <script>
     // Theme loader: only set data-theme (no ui.css injection)
     (function() {
       const theme = localStorage.getItem('petpaths_theme') || 'light';

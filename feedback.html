@@ -211,9 +211,6 @@ h2 {
 </head>
 <body>
 <script>
-if (!localStorage.getItem("petpaths_verified")) {
-    window.location.href = "verify";
-}
 (function() {
     const theme = localStorage.getItem('petpaths_theme') || 'light';
     document.documentElement.setAttribute('data-theme', theme);
