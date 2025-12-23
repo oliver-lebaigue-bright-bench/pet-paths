@@ -299,6 +299,19 @@ window.submitFeedback = () => {
   };
   push(ref(db, 'feedback/'), data).then(() => alert("Thanks for your feedback!"));
 };
+
+// Admin link visibility
+(function(){
+  const adminLink = document.getElementById('adminLink');
+  function update(){ 
+    try{ 
+      const u = JSON.parse(localStorage.getItem('petpaths_currentUser')); 
+      if(adminLink) adminLink.style.display = (u && u.username === 'admin') ? 'flex' : 'none'; 
+    }catch{} 
+  }
+  update();
+  window.addEventListener('storage', update);
+})();
 </script>
 </body>
 </html>

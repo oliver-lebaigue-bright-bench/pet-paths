@@ -1,3 +1,12 @@
+// Utility function to hash passwords using SHA-256
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, onChildAdded, get, set, child, update, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -109,6 +118,11 @@ function renderFeed() {
         const card = createPostCard(allPosts[key], key);
         feedEl.appendChild(card);
     });
+}
+
+// Utility to generate a random key for new user
+function pushKey() {
+    return 'key-' + Math.random().toString(36).substr(2, 12);
 }
 
 function toggleLike(postKey) {
@@ -276,62 +290,108 @@ editProfileForm.addEventListener("submit", e => {
 });
 
 // Auth: Sign in
-signInForm.addEventListener("submit", e => {
+signInForm.addEventListener("submit", async e => {
     e.preventDefault();
     const username = signInForm.signInUsername.value.trim();
     const password = signInForm.signInPassword.value;
+
     if (!username || !password) return alert("Please enter username and password");
+
     if (!allProfiles) return alert("Profiles data not loaded");
-    const foundEntry = Object.entries(allProfiles).find(([key, val]) => val.username.toLowerCase() === username.toLowerCase());
-    if (!foundEntry) return alert("User not found");
+
+    // Find user by username
+    const foundEntry = Object.entries(allProfiles).find(
+        ([key, val]) => val.username.toLowerCase() === username.toLowerCase()
+    );
+    if (!foundEntry) {
+        return alert("User not found");
+    }
     const [userKey, userData] = foundEntry;
-    if (!userData.password) return alert("User has no password set, cannot sign in.");
-    if (password !== userData.password) return alert("Incorrect password");
+
+    if (!userData.password) {
+        return alert("User has no password set, cannot sign in.");
+    }
+
+    // Hash the input password and compare
+    const hashedInputPassword = await hashPassword(password);
+    if (hashedInputPassword !== userData.password) {
+        return alert("Incorrect password");
+    }
+
     setCurrentUser({ ...userData, key: userKey });
     closeAuth();
 });
 
 // Auth: Sign up
-signUpForm.addEventListener("submit", e => {
+signUpForm.addEventListener("submit", async e => {
     e.preventDefault();
     const username = signUpForm.signUpUsername.value.trim();
     const password = signUpForm.signUpPassword.value;
+
     if (!username || !password) return alert("Please enter username and password");
-    const usernameExists = Object.values(allProfiles).some(prof => prof.username.toLowerCase() === username.toLowerCase());
-    if (usernameExists) return alert("Username already taken");
-    const newUserKey = 'key-' + Math.random().toString(36).substr(2, 12);
+
+    // Check if username already exists
+    const usernameExists = Object.values(allProfiles).some(
+        prof => prof.username.toLowerCase() === username.toLowerCase()
+    );
+    if (usernameExists) {
+        return alert("Username already taken");
+    }
+
+    // Hash the password
+    const hashedPassword = await hashPassword(password);
+
+    // Create new user profile (with minimal data)
+    const newUserKey = pushKey();
+
     const newProfile = {
         username,
-        password,
+        password: hashedPassword,  // Store hashed password
         displayName: username,
         petName: "",
         location: "",
         notes: "",
         photoURL: ""
     };
-    set(ref(db, `accounts/${newUserKey}`), newProfile).then(() => {
-        allProfiles[newUserKey] = newProfile;
-        setCurrentUser({ ...newProfile, key: newUserKey });
-        closeAuth();
-        renderFeed();
-    }).catch(() => alert("Failed to create account"));
+
+    set(ref(db, `accounts/${newUserKey}`), newProfile)
+        .then(() => {
+            allProfiles[newUserKey] = newProfile;
+            setCurrentUser({ ...newProfile, key: newUserKey });
+            closeAuth();
+            renderProfiles();
+        })
+        .catch(() => alert("Failed to create account"));
 });
 
 // Auth: Change Password
-changePasswordForm.addEventListener("submit", e => {
+changePasswordForm.addEventListener("submit", async e => {
     e.preventDefault();
     const username = changePasswordForm.changePasswordUsername.value.trim();
     const newPassword = changePasswordForm.newPassword.value;
+
     if (!username || !newPassword) return alert("Please enter username and new password");
-    const foundEntry = Object.entries(allProfiles).find(([key, val]) => val.username.toLowerCase() === username.toLowerCase());
-    if (!foundEntry) return alert("User not found");
+
+    const foundEntry = Object.entries(allProfiles).find(
+        ([key, val]) => val.username.toLowerCase() === username.toLowerCase()
+    );
+
+    if (!foundEntry) {
+        return alert("User not found");
+    }
     const [userKey, userData] = foundEntry;
-    update(ref(db, `accounts/${userKey}`), { password: newPassword }).then(() => {
-        allProfiles[userKey].password = newPassword;
-        alert("Password changed successfully!");
-        showAuthView("signin");
-        changePasswordForm.reset();
-    }).catch(() => alert("Failed to change password"));
+
+    // Hash the new password
+    const hashedNewPassword = await hashPassword(newPassword);
+
+    update(ref(db, `accounts/${userKey}`), { password: hashedNewPassword })  // Store hashed password
+        .then(() => {
+            allProfiles[userKey].password = hashedNewPassword;
+            alert("Password changed successfully!");
+            showAuthView("signin");
+            changePasswordForm.reset();
+        })
+        .catch(() => alert("Failed to change password"));
 });
 
 // Sign out

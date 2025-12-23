@@ -930,6 +930,18 @@
   const db = getDatabase(app);
   const adminId = "admin_" + Math.random().toString(36).slice(2);
 
+  // Fetch password from DB
+  let adminPassword = null;
+  get(ref(db, 'admin/codes/password')).then(snapshot => {
+    adminPassword = snapshot.val();
+    if (!adminPassword) {
+      alert('Admin password not found in database.');
+    }
+  }).catch(error => {
+    console.error('Error fetching admin password:', error);
+    alert('Failed to load admin password.');
+  });
+
   // Elements
   const passwordForm = document.getElementById("passwordCheckForm");
   const passwordInput = document.getElementById("adminPassword");
@@ -964,11 +976,9 @@
   const ACCOUNTS_PATH = "accounts";
   const LOGS_PATH = "admin/logs";
 
-  const correctPassword = "Onniecat123!";
-
   passwordForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    if (passwordInput.value === correctPassword) {
+    if (adminPassword && passwordInput.value === adminPassword) {
       passwordSection.style.display = "none";
       adminContent.style.display = "block";
       // remove page lock and restore interactions
