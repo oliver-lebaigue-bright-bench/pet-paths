@@ -308,6 +308,7 @@
       letter-spacing: -0.02em;
       /* gradient text using theme tokens */
       background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 8px 30px rgba(74,79,207,0.12);
@@ -422,6 +423,78 @@
   @keyframes float {
       0%, 100% { transform: translateY(0px); }
       50% { transform: translateY(-10px); }
+  }
+
+  /* Moving popup styles */
+  .moving-popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8); /* Darker overlay for more intrusion */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      animation: fadeIn 0.3s ease-out;
+  }
+  .moving-popup {
+      background: var(--bg);
+      color: var(--text);
+      padding: 30px; /* Increased padding for larger size */
+      border-radius: 15px; /* Slightly larger radius */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5); /* Stronger shadow */
+      max-width: 500px; /* Wider popup */
+      text-align: center;
+      font-family: 'Playwrite US Modern', cursive;
+      animation: bounceIn 0.5s ease-out;
+      font-size: 1.1rem; /* Slightly larger text */
+      animation: bounceIn 0.5s ease-out, pulse 2s infinite ease-in-out 1s; /* Add pulse after initial bounce */
+  }
+  .moving-popup h2 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 1.5rem; /* Larger heading */
+  }
+  .moving-popup a {
+      color: var(--primary);
+      text-decoration: underline;
+      font-weight: bold;
+  }
+  .moving-popup .close-btn {
+      background: var(--primary);
+      color: var(--btn-text);
+      border: none;
+      padding: 10px 20px; /* Larger button */
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-family: 'Playwrite US Modern', cursive;
+      font-size: 1rem;
+      opacity: 0.5; /* Initially disabled-looking */
+      pointer-events: none; /* Disabled initially */
+  }
+  .moving-popup .close-btn.enabled {
+      opacity: 1;
+      pointer-events: auto;
+  }
+  .moving-popup .close-btn:hover.enabled {
+      background: var(--primary-dark);
+  }
+  .moving-popup .countdown {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: var(--text);
+  }
+  @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
   }
   </style>
   
@@ -539,6 +612,18 @@
     <a href="/feedback"><i class="fa-solid fa-clipboard-list"></i></a>
     <a href="/admin-space/admin" id="adminLink" style="display:none;"><i class="fa-solid fa-user-shield"></i></a>
   </div>
+
+  <div id="movingPopup" class="moving-popup-overlay" style="display: none;">
+    <div class="moving-popup">
+      <i class="fa-solid fa-dog" style="font-size: 3rem; color: var(--primary); margin-bottom: 10px;"></i>
+      <h2>We are moving!</h2>
+      <p>Pet Paths is now available at <a href="https://pet-paths.netlify.app" target="_blank">pet-paths.netlify.app</a>. Please update your bookmarks and visit the new site for the latest features!</p>
+      <p>This change ensures better performance and security for all users. Thank you for your patience!</p>
+      <div class="countdown">You can close this in <span id="countdownTimer">5</span> seconds...</div>
+      <button class="close-btn">Close</button>
+    </div>
+  </div>
+
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -642,6 +727,41 @@
       update();
       window.addEventListener('storage', update);
     })();
+
+    // Moving popup logic
+    if (!window.location.hostname.endsWith('.netlify.app') && !window.location.hostname.endsWith('.netlify.com')) {
+      document.getElementById('movingPopup').style.display = 'flex';
+      startCountdown();
+    }
+
+    function closeMovingPopup() {
+      document.getElementById('movingPopup').style.display = 'none';
+    }
+
+    function startCountdown() {
+      let timeLeft = 5; // 5-second timer
+      const timerElement = document.getElementById('countdownTimer');
+      const closeBtn = document.querySelector('.close-btn');
+
+      const countdown = setInterval(() => {
+        timerElement.textContent = timeLeft;
+        timeLeft--;
+
+        if (timeLeft < 0) {
+          clearInterval(countdown);
+          closeBtn.classList.add('enabled'); // Enable the button
+          timerElement.parentElement.textContent = 'You can now close this popup.'; // Update message
+        }
+      }, 1000);
+    }
+
+    // Attach event listener to close button
+    document.addEventListener('DOMContentLoaded', () => {
+      const closeBtn = document.querySelector('.close-btn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', closeMovingPopup);
+      }
+    });
   </script>
 </body>
 </html>
